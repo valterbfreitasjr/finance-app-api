@@ -1,8 +1,9 @@
+import 'dotenv/config.js'
 import pg from 'pg'
 
 const { Pool } = pg
 
-console.log(process.env.POSTGRES_PASSWORD)
+console.log('Password: ', process.env.POSTGRES_PASSWORD)
 
 export const pool = new Pool({
     user: process.env.POSTGRES_USER,
