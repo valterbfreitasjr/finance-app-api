@@ -25,12 +25,10 @@ app.post('/api/users', async (req, res) => {
 })
 
 // GET USER BY ID
-app.get('/api/users/:id', async (req, res) => {
-    const id = req.params.id
-
+app.get('/api/users/:userId', async (req, res) => {
     const getUserByIdController = new GetUserByIdController()
 
-    const getUserByIdResponse = await getUserByIdController.execute(id)
+    const getUserByIdResponse = await getUserByIdController.execute(req)
 
     return res.status(200).json(getUserByIdResponse.body)
 })

@@ -40,7 +40,7 @@ export class CreateUserController {
                 const createdUser = await createUserUseCase.execute(params)
 
                 // Retornar a reposta para o usuário (status code)
-                return created({ data: createdUser })
+                return created(createdUser)
             }
         } catch (error) {
             return serverError()
