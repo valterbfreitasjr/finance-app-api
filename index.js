@@ -1,6 +1,7 @@
 import express from 'express'
 import { CreateUserController } from './src/controller/create-user.js'
 import cors from 'cors'
+import { GetUserByIdController } from './src/controller/get-user-by-id.js'
 
 const app = express()
 
@@ -23,11 +24,15 @@ app.post('/api/users', async (req, res) => {
     res.status(createUserResponse.statusCode).json(createUserResponse.body)
 })
 
-// GET USER
-app.get('/api/users', async (req, res) => {
-    console.log('GET USER', req.body)
+// GET USER BY ID
+app.get('/api/users/:id', async (req, res) => {
+    const id = req.params.id
 
-    return res.status(200)
+    const getUserByIdController = new GetUserByIdController()
+
+    const getUserByIdResponse = await getUserByIdController.execute(id)
+
+    return res.status(200).json(getUserByIdResponse.body)
 })
 
-app.listen(3000, () => console.log('Listening on port 3000'))
+app.listen(3000, () => console.log(`Listening on port ${process.env.PORT}`))
