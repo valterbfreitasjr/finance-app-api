@@ -39,7 +39,7 @@ export class CreateUserController {
             return {
                 statusCode: 500,
                 body: {
-                    errorMessage: 'Interna server error.',
+                    errorMessage: 'Internal server error.',
                 },
             }
         }
