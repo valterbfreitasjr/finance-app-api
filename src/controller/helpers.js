@@ -20,11 +20,9 @@ export const ok = (body) => ({
     body,
 })
 
-export const notFound = () => {
+export const notFound = (body) => {
     return {
         statusCode: 404,
-        body: {
-            errorMessage: 'Not found.',
-        },
+        body,
     }
 }
