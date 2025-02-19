@@ -5,7 +5,6 @@ import { PostgresUpdateUserRepository } from '../repositories/postgres/update-us
 
 export class UpdateUserUseCase {
     async execute(userId, updateUserParams) {
-        // Se o e-mail for atualizado, verificar se já está em uso
         if (updateUserParams.email) {
             const postgresGetUserByEmailRepository =
                 new PostgresGetUserByEmailRepository()
@@ -18,7 +17,6 @@ export class UpdateUserUseCase {
             }
         }
 
-        // Se a senha for atualizada, criptografar a nova senha
         const user = {
             ...updateUserParams,
         }
@@ -32,7 +30,6 @@ export class UpdateUserUseCase {
             user.password = hashedPassword
         }
 
-        // Atualizar o usuário no banco de dados
         const postgresUpdateUserRepository = new PostgresUpdateUserRepository()
 
         const updatedUser = await postgresUpdateUserRepository.execute(
