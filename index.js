@@ -45,7 +45,7 @@ app.patch('/api/users/:userId', async (req, res) => {
 })
 
 //DELETE USER BY ID
-app.delete('api/users/:userId', async (req, res) => {
+app.delete('/api/users/:userId', async (req, res) => {
     const deleteUserController = new DeleteUserController()
 
     const deleteUserResponse = await deleteUserController.execute(req)
