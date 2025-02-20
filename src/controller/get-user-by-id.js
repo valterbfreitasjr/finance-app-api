@@ -1,10 +1,10 @@
 import { GetUserByIdUseCase } from '../use-cases/get-user-by-id.js'
 import {
     checkIfUuidIsValid,
-    invalidIdResponde,
+    invalidIdResponse,
     serverError,
     ok,
-    notFound,
+    userNotFoundResponse,
 } from './helpers/index.js'
 
 export class GetUserByIdController {
@@ -14,7 +14,7 @@ export class GetUserByIdController {
 
             const isIdValid = checkIfUuidIsValid(httpRequest.params.userId)
             if (!isIdValid) {
-                return invalidIdResponde()
+                return invalidIdResponse()
             }
 
             const user = await getUserByIdUseCase.execute(
@@ -22,7 +22,7 @@ export class GetUserByIdController {
             )
 
             if (!user) {
-                return notFound({ message: 'User not found' })
+                return userNotFoundResponse()
             }
 
             return ok(user)

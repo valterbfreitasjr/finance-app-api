@@ -13,9 +13,15 @@ export const invalidEmailIsAlreadyInUseResponse = () => {
     })
 }
 
-export const invalidIdResponde = () => {
+export const invalidIdResponse = () => {
     return badRequest({
         message: 'Invalid user id',
+    })
+}
+
+export const userNotFoundResponse = () => {
+    return badRequest({
+        message: 'User not found',
     })
 }
 
