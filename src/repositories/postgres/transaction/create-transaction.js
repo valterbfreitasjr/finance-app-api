@@ -13,7 +13,7 @@ export class PostgresCreateTransactionRepository {
                 createTransactionParams.user_id,
                 createTransactionParams.name,
                 createTransactionParams.date,
-                createTransactionParams.amout,
+                createTransactionParams.amount,
                 createTransactionParams.type,
             ],
         )

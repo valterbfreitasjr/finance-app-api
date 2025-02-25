@@ -12,7 +12,7 @@ export class CreateTransactionUseCase {
     }
     async execute(createTransactionParams) {
         // TODO - Verificar se o usuário existe
-        const userId = createTransactionParams.userId
+        const userId = createTransactionParams.user_id
         const user = await this.postgresGetUserByIdRepository.execute(userId)
 
         if (!user) throw new UserNotFoundError(userId)
