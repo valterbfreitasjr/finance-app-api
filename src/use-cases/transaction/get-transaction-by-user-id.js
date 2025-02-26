@@ -18,7 +18,7 @@ export class GetTransactionByUserIdUseCase {
         }
 
         const userTransactions =
-            await this.postgresGetTransactionByUserIdRepository(userId)
+            await this.postgresGetTransactionByUserIdRepository.execute(userId)
 
         return userTransactions
     }

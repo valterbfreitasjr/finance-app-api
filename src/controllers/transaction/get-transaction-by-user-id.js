@@ -17,7 +17,7 @@ export class GetTransactionByUserIdController {
             const userId = httpRequest.query.userId
 
             if (!userId) {
-                return requiredFieldIsMissingResponse('userId')
+                return requiredFieldIsMissingResponse(userId)
             }
 
             // Validar se o userId é um UUID
@@ -29,7 +29,7 @@ export class GetTransactionByUserIdController {
             const userTransactions =
                 await this.getTransactionByUserIdUseCase.execute(userId)
 
-            return ok(userTransactions)
+            return ok({ userTransactions })
         } catch (error) {
             console.error(error)
 

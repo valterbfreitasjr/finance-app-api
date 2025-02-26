@@ -7,6 +7,7 @@ import {
     makeGetUserByIdController,
     makeUpdateUserController,
     makeCreateTransactionController,
+    makeGetTransactionByUserIdController,
 } from './src/factories/index.js'
 
 const app = express()
@@ -62,6 +63,17 @@ app.post('/api/transactions', async (req, res) => {
     const createTransactionController = makeCreateTransactionController()
 
     const { statusCode, body } = await createTransactionController.execute(req)
+
+    return res.status(statusCode).json(body)
+})
+
+// GET TRANSACTION BY USER ID
+app.get('/api/transactions', async (req, res) => {
+    const getTransactionByUserIdController =
+        makeGetTransactionByUserIdController()
+
+    const { statusCode, body } =
+        await getTransactionByUserIdController.execute(req)
 
     return res.status(statusCode).json(body)
 })
