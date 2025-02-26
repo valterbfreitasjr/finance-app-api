@@ -1,4 +1,4 @@
-import { userNotFoundResponse } from '../../controllers/helpers/index.js'
+import { UserNotFoundError } from '../../errors/user.js'
 
 export class GetTransactionByUserIdUseCase {
     constructor(
@@ -14,7 +14,7 @@ export class GetTransactionByUserIdUseCase {
         const user = await this.postgresGetUserByIdRepository.execute(userId)
 
         if (!user) {
-            return userNotFoundResponse()
+            throw new UserNotFoundError(userId)
         }
 
         const userTransactions =
