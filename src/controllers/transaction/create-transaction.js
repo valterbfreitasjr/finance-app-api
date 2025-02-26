@@ -4,6 +4,7 @@ import {
     checkIfUuidIsValid,
     created,
     invalidIdResponse,
+    requiredFieldIsMissingResponse,
     serverError,
     validateRequiredFields,
 } from '../helpers/index.js'
@@ -23,9 +24,7 @@ export class CreateTransactionController {
                 validateRequiredFields(params, requiredFields)
 
             if (!requiredFieldsOk) {
-                return badRequest({
-                    message: `The field ${missingField} is required!`,
-                })
+                return requiredFieldIsMissingResponse(missingField)
             }
 
             //Validar se o  UUID é válido
@@ -34,14 +33,7 @@ export class CreateTransactionController {
                 return invalidIdResponse()
             }
 
-            //TODO - Validar se o amount > 0
-            if (params.amount <= 0) {
-                return badRequest({
-                    message: 'The amount must be greater than 0.',
-                })
-            }
-
-            //TODO - Validar se há 2 casas decimais
+            //TODO - Validar se há 2 casas decimais e se é maior que 0 (allow_negatives: false)
             const amountIsValid = validator.isCurrency(
                 params.amount.toString(),
                 {
