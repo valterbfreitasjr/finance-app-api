@@ -7,9 +7,13 @@ export const invalidIdResponse = () => {
     })
 }
 
-export const checkIfUuidIsValid = (userId) => validator.isUUID(userId)
+export const checkIfUuidIsValid = (userId) => {
+    return validator.isUUID(userId)
+}
 
-export const checkIfIsString = (value) => typeof value === 'string'
+export const checkIfIsString = (value) => {
+    return typeof value === 'string'
+}
 
 export const requiredFieldIsMissingResponse = (field) => {
     return badRequest({
