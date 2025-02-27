@@ -1,5 +1,3 @@
-import { UserNotFoundError } from '../../errors/user'
-
 export class UpdateTransactionUseCase {
     constructor(
         postgresUpdateTransactionRepository,
@@ -10,16 +8,10 @@ export class UpdateTransactionUseCase {
         this.postgresGetUserByIdRepository = postgresGetUserByIdRepository
     }
 
-    async execute(userId, updateTransactionParams) {
-        const user = await this.postgresGetUserByIdRepository.execute(userId)
-
-        if (!user) {
-            throw new UserNotFoundError(userId)
-        }
-
+    async execute(transactionId, updateTransactionParams) {
         const updatedTransaction =
             await this.postgresUpdateTransactionRepository.execute(
-                userId,
+                transactionId,
                 updateTransactionParams,
             )
 
