@@ -9,6 +9,8 @@ import {
     badRequest,
     ok,
     serverError,
+    notAllowedFieldsResponse,
+    checkIfFieldIsEmpty,
 } from '../helpers/index.js'
 
 export class UpdateUserController {
@@ -38,8 +40,13 @@ export class UpdateUserController {
             )
 
             if (someFieldIsNotAllowed) {
+                return notAllowedFieldsResponse()
+            }
+
+            const passwordIsEmpty = checkIfFieldIsEmpty(params.password)
+            if (passwordIsEmpty) {
                 return badRequest({
-                    message: 'Some field is not allowed.',
+                    message: 'Password Empty',
                 })
             }
 
@@ -50,8 +57,16 @@ export class UpdateUserController {
                 }
             }
 
+            const emailIsEmpty = checkIfFieldIsEmpty(params.email)
+            if (emailIsEmpty) {
+                return badRequest({
+                    message: 'Email Empty',
+                })
+            }
+
             if (params.email) {
                 const emailIsValid = checkIfEmailIsValid(params.email)
+
                 if (!emailIsValid) {
                     return invalidEmailIsAlreadyInUseResponse()
                 }
