@@ -15,7 +15,7 @@ export class GetUserBalanceUseCase {
         if (!user) throw new UserNotFoundError(userId)
 
         const balance =
-            await this.postgresGetUserBalanceRepository.execute(user)
+            await this.postgresGetUserBalanceRepository.execute(userId)
 
         return balance
     }
