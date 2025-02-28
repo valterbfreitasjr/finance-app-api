@@ -2,34 +2,27 @@ import { UserNotFoundError } from '../../errors/user.js'
 import {
     checkIfUuidIsValid,
     invalidIdResponse,
-    ok,
-    requiredFieldIsMissingResponse,
     serverError,
+    ok,
     userNotFoundResponse,
 } from '../helpers/index.js'
 
-export class GetTransactionByUserIdController {
-    constructor(getTransactionByUserIdUseCase) {
-        this.getTransactionByUserIdUseCase = getTransactionByUserIdUseCase
+export class GetUserBalanceController {
+    constructor(getUserBalanceUseCase) {
+        this.getUserBalanceUseCase = getUserBalanceUseCase
     }
     async execute(httpRequest) {
         try {
-            const userId = httpRequest.query.userId
+            const userId = httpRequest.params.userId
 
-            if (!userId) {
-                return requiredFieldIsMissingResponse(userId)
-            }
-
-            // Validar se o userId é um UUID
             const isIdValid = checkIfUuidIsValid(userId)
             if (!isIdValid) {
                 return invalidIdResponse()
             }
 
-            const userTransactions =
-                await this.getTransactionByUserIdUseCase.execute(userId)
+            const balance = await this.getUserBalanceUseCase.execute(userId)
 
-            return ok({ userTransactions })
+            return ok(balance)
         } catch (error) {
             if (error instanceof UserNotFoundError) {
                 return userNotFoundResponse()
