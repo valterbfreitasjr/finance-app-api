@@ -46,7 +46,7 @@ export class UpdateUserController {
             const passwordIsEmpty = checkIfFieldIsEmpty(params.password)
             if (passwordIsEmpty) {
                 return badRequest({
-                    message: 'Password Empty',
+                    message: 'Password field cannot be empty.',
                 })
             }
 
@@ -60,7 +60,7 @@ export class UpdateUserController {
             const emailIsEmpty = checkIfFieldIsEmpty(params.email)
             if (emailIsEmpty) {
                 return badRequest({
-                    message: 'Email Empty',
+                    message: 'Email field cannot be empty',
                 })
             }
 

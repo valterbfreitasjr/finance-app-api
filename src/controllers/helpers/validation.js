@@ -16,7 +16,7 @@ export const checkIfIsString = (value) => {
 }
 
 export const checkIfFieldIsEmpty = (field) => {
-    return validator.isEmpty(field)
+    return field.isEmpty || field.trim() === ''
 }
 
 export const requiredFieldIsMissingResponse = (field) => {
