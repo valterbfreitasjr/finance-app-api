@@ -1,11 +1,9 @@
+import { ZodError } from 'zod'
+import { updateTransactionSchema } from '../../schemas/index.js'
 import {
-    checkIfAmountIsValid,
-    checkIfTypeIsValid,
+    badRequest,
     checkIfUuidIsValid,
-    invalidAmountResponse,
     invalidIdResponse,
-    invalidTypeResponse,
-    notAllowedFieldsResponse,
     ok,
     serverError,
 } from '../helpers/index.js'
@@ -19,42 +17,13 @@ export class UpdateTrasactionController {
             const params = httpRequest.body
             const transactionId = httpRequest.params.transactionId
 
-            //Validar se o  UUID é válido
+            //Validar se o ID da transação é um UUID
             const isIdValid = checkIfUuidIsValid(transactionId)
             if (!isIdValid) {
                 return invalidIdResponse()
             }
 
-            //Validar campos obrigatórios
-            const allowedFields = ['name', 'date', 'amount', 'type']
-
-            const someFieldIsNotAllowed = Object.keys(params).some(
-                (field) => !allowedFields.includes(field),
-            )
-
-            if (someFieldIsNotAllowed) {
-                return notAllowedFieldsResponse()
-            }
-
-            //TODO - Validar se há 2 casas decimais e se é maior que 0 (allow_negatives: false)
-            if (params.amount) {
-                const amountIsValid = checkIfAmountIsValid(params.amount)
-
-                if (!amountIsValid) {
-                    return invalidAmountResponse()
-                }
-            }
-
-            // Validar se o type é válido
-            if (params.type) {
-                const type = params.type.trim().toUpperCase()
-
-                const typeIsValid = checkIfTypeIsValid(type)
-
-                if (!typeIsValid) {
-                    return invalidTypeResponse()
-                }
-            }
+            await updateTransactionSchema.parseAsync(params)
 
             const updatedTrasaction =
                 await this.updateTransactionUseCase.execute(
@@ -64,6 +33,11 @@ export class UpdateTrasactionController {
 
             return ok(updatedTrasaction)
         } catch (error) {
+            if (error instanceof ZodError) {
+                return badRequest({
+                    message: error.errors[0].message,
+                })
+            }
             console.log(error)
             return serverError()
         }
