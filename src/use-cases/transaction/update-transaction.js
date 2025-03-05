@@ -1,11 +1,7 @@
 export class UpdateTransactionUseCase {
-    constructor(
-        postgresUpdateTransactionRepository,
-        postgresGetUserByIdRepository,
-    ) {
+    constructor(postgresUpdateTransactionRepository) {
         this.postgresUpdateTransactionRepository =
             postgresUpdateTransactionRepository
-        this.postgresGetUserByIdRepository = postgresGetUserByIdRepository
     }
 
     async execute(transactionId, updateTransactionParams) {

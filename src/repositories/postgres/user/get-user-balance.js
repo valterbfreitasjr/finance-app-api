@@ -37,8 +37,6 @@ export class PostgresGetUserBalanceRepository {
             totalExpenses._sum.amount -
             totalInvestments._sum.amount
 
-        console.log(balance)
-
         return {
             balance,
             totalEarnings,
