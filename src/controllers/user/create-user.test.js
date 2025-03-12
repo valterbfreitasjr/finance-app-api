@@ -9,17 +9,16 @@ describe('Create User Controller', () => {
 
     it('should create an user', async () => {
         //arrange
-        const createUserController = new CreateUserController(
-            new CreateUserUseCaseStub(),
-        )
+        const createUserUseCase = new CreateUserUseCaseStub()
+        const createUserController = new CreateUserController(createUserUseCase)
 
         //act
         const httpRequest = {
             body: {
-                first_name: '',
-                last_name: '',
-                email: '',
-                password: '',
+                first_name: 'Valter',
+                last_name: 'Jr',
+                email: 'v@email.com',
+                password: '123456',
             },
         }
 
