@@ -50,4 +50,17 @@ describe('Delete User Controller', () => {
         //assert
         expect(result.statusCode).toEqual(400)
     })
+
+    // User not found
+    it('should return 404 if user is not found', async () => {
+        //arrange
+        const { deleteUserUseCase, sut } = makeSut()
+        jest.spyOn(deleteUserUseCase, 'execute').mockReturnValue(null)
+
+        //act
+        const result = await sut.execute(httpRequest)
+
+        //assert
+        expect(result.statusCode).toEqual(404)
+    })
 })
