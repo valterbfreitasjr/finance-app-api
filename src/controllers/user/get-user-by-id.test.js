@@ -1,18 +1,26 @@
 import { faker } from '@faker-js/faker'
-import { GetUserBalanceController } from './get-user-balance'
+import { GetUserByIdController } from './get-user-by-id'
 
-describe('Get User Balance Controller', () => {
-    class GetUserBalanceUseCaseStub {
+describe('Get User By Id Controller', () => {
+    class GetUserByIdUseCaseStub {
         async execute() {
-            return faker.number.int()
+            return {
+                id: faker.string.uuid(),
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({
+                    length: 7,
+                }),
+            }
         }
     }
 
     const makeSut = () => {
-        const getUserBalanceUseCase = new GetUserBalanceUseCaseStub()
-        const sut = new GetUserBalanceController(getUserBalanceUseCase)
+        const getUserByIdUseCase = new GetUserByIdUseCaseStub()
+        const sut = new GetUserByIdController(getUserByIdUseCase)
 
-        return { getUserBalanceUseCase, sut }
+        return { getUserByIdUseCase, sut }
     }
 
     const httpRequest = {
@@ -21,8 +29,8 @@ describe('Get User Balance Controller', () => {
         },
     }
 
-    // Get User Balance
-    it('should  return 200 if balance is found', async () => {
+    // Get User By Id
+    it('should return 200 if user is found', async () => {
         //arrange
         const { sut } = makeSut()
 
@@ -51,12 +59,12 @@ describe('Get User Balance Controller', () => {
         expect(result.statusCode).toEqual(400)
     })
 
-    // User not found
-    it('should return 500 if GetUserBalanceUseCase throws an error', async () => {
+    // UserId not found
+    it('should return 400 if userId is not found', async () => {
         //arrange
-        const { sut, getUserBalanceUseCase } = makeSut()
+        const { sut, getUserByIdUseCase } = makeSut()
 
-        jest.spyOn(getUserBalanceUseCase, 'execute').mockRejectedValueOnce(
+        jest.spyOn(getUserByIdUseCase, 'execute').mockRejectedValueOnce(
             new Error(),
         )
 

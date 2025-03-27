@@ -3,8 +3,16 @@ import { DeleteUserController } from './delete-user'
 
 describe('Delete User Controller', () => {
     class DeleteUserUseCaseStub {
-        execute(user) {
-            return user
+        async execute() {
+            return {
+                id: faker.string.uuid(),
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({
+                    length: 7,
+                }),
+            }
         }
     }
 
