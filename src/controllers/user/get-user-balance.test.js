@@ -51,11 +51,10 @@ describe('Get User Balance Controller', () => {
         expect(result.statusCode).toEqual(400)
     })
 
-    // User not found
+    // Throws Error
     it('should return 500 if GetUserBalanceUseCase throws an error', async () => {
         //arrange
         const { sut, getUserBalanceUseCase } = makeSut()
-
         jest.spyOn(getUserBalanceUseCase, 'execute').mockRejectedValueOnce(
             new Error(),
         )
