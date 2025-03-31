@@ -67,8 +67,25 @@ describe('Update User Controller', () => {
             ...httpRequest,
             body: {
                 ...httpRequest.body,
-                password: '123',
+                password: faker.internet.password({ length: 5 }),
             },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Invalid UserId
+    it('should return 400 if UserId is invalid', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            params: {
+                userId: 'invalid-user-id',
+            },
+            body: httpRequest.body,
         })
 
         // assert
