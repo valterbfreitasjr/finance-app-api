@@ -46,7 +46,7 @@ describe('Update User Controller', () => {
 
         // act
         const result = await sut.execute({
-            ...httpRequest,
+            params: httpRequest.params,
             body: {
                 ...httpRequest.body,
                 email: 'invalid-email',
@@ -64,7 +64,7 @@ describe('Update User Controller', () => {
 
         // act
         const result = await sut.execute({
-            ...httpRequest,
+            params: httpRequest.params,
             body: {
                 ...httpRequest.body,
                 password: faker.internet.password({ length: 5 }),
@@ -86,6 +86,24 @@ describe('Update User Controller', () => {
                 userId: 'invalid-user-id',
             },
             body: httpRequest.body,
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Unallowed fields
+    it('should return 400 if unallowed fiends is provided', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            params: httpRequest.params,
+            body: {
+                ...httpRequest.body,
+                unallowed_field: 'unallowed',
+            },
         })
 
         // assert
