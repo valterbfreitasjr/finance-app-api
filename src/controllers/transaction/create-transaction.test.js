@@ -41,4 +41,89 @@ describe('Create Transaction Controller', () => {
         expect(result.statusCode).toBe(201)
         expect(result.body).not.toBeUndefined()
     })
+
+    // Missing user_id
+    it('should return 400 when missing user_id', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            body: {
+                ...httpRequest.body,
+                user_id: undefined,
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Missing name
+    it('should return 400 when missing name', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            body: {
+                ...httpRequest.body,
+                name: undefined,
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Missing date
+    it('should return 400 when missing date', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            body: {
+                ...httpRequest.body,
+                date: undefined,
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Missing amount
+    it('should return 400 when missing amount', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            body: {
+                ...httpRequest.body,
+                amount: undefined,
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Missing type
+    it('should return 400 when missing type', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            body: {
+                ...httpRequest.body,
+                type: undefined,
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
 })
