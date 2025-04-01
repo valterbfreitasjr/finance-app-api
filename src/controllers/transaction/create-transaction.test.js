@@ -143,4 +143,38 @@ describe('Create Transaction Controller', () => {
         // assert
         expect(result.statusCode).toBe(400)
     })
+
+    // Invalid Type
+    it('should return 400 when invalid type is provided', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            body: {
+                ...httpRequest.body,
+                type: 'invalid_type',
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Invalid Amount
+    it('should return 400 when invalid type of amount is provided', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            body: {
+                ...httpRequest.body,
+                amount: 'invalid_type',
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
 })
