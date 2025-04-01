@@ -30,12 +30,15 @@ export class DeleteTransactionController {
                     userId,
                 )
 
+            if (!deletedTransaction) {
+                return transactionNotFoundResponse()
+            }
+
             return ok(deletedTransaction)
         } catch (error) {
             if (error instanceof TransactionNotFoundError) {
                 return transactionNotFoundResponse()
             }
-
             console.error(error)
 
             return serverError()

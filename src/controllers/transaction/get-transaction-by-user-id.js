@@ -29,6 +29,10 @@ export class GetTransactionByUserIdController {
             const userTransactions =
                 await this.getTransactionByUserIdUseCase.execute(userId)
 
+            if (!userTransactions) {
+                return userNotFoundResponse()
+            }
+
             return ok({ userTransactions })
         } catch (error) {
             if (error instanceof UserNotFoundError) {

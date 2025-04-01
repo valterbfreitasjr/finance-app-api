@@ -1,0 +1,121 @@
+import { faker } from '@faker-js/faker'
+import { DeleteTransactionController } from './delete-transaction'
+
+describe('Delete Transaction Controller', () => {
+    class DeleteTransactionUseCaseStub {
+        async execute() {
+            return {
+                id: faker.string.uuid(),
+                user_id: faker.string.uuid(),
+                name: faker.person.firstName(),
+                date: faker.date.anytime().toISOString(),
+                type: faker.helpers.arrayElement([
+                    'EXPENSE',
+                    'EARNING',
+                    'INVESTMENT',
+                ]),
+                amount: Number(faker.finance.amount()),
+            }
+        }
+    }
+
+    const makeSut = () => {
+        const deleteTransactionUseCaseStub = new DeleteTransactionUseCaseStub()
+        const sut = new DeleteTransactionController(
+            deleteTransactionUseCaseStub,
+        )
+
+        return {
+            sut,
+            deleteTransactionUseCaseStub,
+        }
+    }
+
+    const httpRequest = {
+        params: {
+            transactionId: faker.string.uuid(),
+        },
+        body: {
+            user_id: faker.string.uuid(),
+        },
+    }
+
+    // Deleted transaction successfully
+    it('should return 200', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute(httpRequest)
+
+        // assert
+        expect(result.statusCode).toBe(200)
+    })
+
+    // Invalid transaction_id
+    it('should return 400', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            ...httpRequest,
+            params: {
+                transactionId: 'invalid_id',
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Invalid user_id
+    it('should return 400', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            ...httpRequest,
+            body: {
+                user_id: 'invalid_id',
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Transaction not found
+    it('should return 404 if transaction is not found', async () => {
+        // arrange
+        const { sut, deleteTransactionUseCaseStub } = makeSut()
+        jest.spyOn(
+            deleteTransactionUseCaseStub,
+            'execute',
+        ).mockResolvedValueOnce(null)
+
+        // act
+        const result = await sut.execute(httpRequest)
+
+        // assert
+        expect(result.statusCode).toBe(404)
+        expect(result.body.message).toBe('Transaction not found.')
+    })
+
+    // DeleteTransactionUseCase throws an error
+    it('should return 500 if DeleteTransactionUseCase throws an error', async () => {
+        // arrange
+        const { sut, deleteTransactionUseCaseStub } = makeSut()
+        jest.spyOn(
+            deleteTransactionUseCaseStub,
+            'execute',
+        ).mockRejectedValueOnce(new Error())
+
+        // act
+        const result = await sut.execute(httpRequest)
+
+        // assert
+        expect(result.statusCode).toBe(500)
+    })
+})
