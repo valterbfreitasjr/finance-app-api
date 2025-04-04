@@ -14,8 +14,8 @@ export class UpdateTrasactionController {
     }
     async execute(httpRequest) {
         try {
-            const params = httpRequest.body
             const transactionId = httpRequest.params.transactionId
+            const params = httpRequest.body
 
             //Validar se o ID da transação é um UUID
             const isIdValid = checkIfUuidIsValid(transactionId)
