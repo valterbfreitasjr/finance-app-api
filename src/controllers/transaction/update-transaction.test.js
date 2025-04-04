@@ -119,4 +119,39 @@ describe('Update Transaction Controller', () => {
         // assert
         expect(result.statusCode).toBe(400)
     })
+
+    // Invalid date
+    it('should return 400 when invalid date is provided', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute({
+            ...httpRequest,
+            body: {
+                ...httpRequest.body,
+                date: 'invalid-type',
+            },
+        })
+
+        // assert
+        expect(result.statusCode).toBe(400)
+    })
+
+    // Error
+    it('should return 500 when UpdateTransactionUseCase throws an error', async () => {
+        // arrange
+        const { sut, updateTransactionUseCaseStub } = makeSut()
+
+        jest.spyOn(
+            updateTransactionUseCaseStub,
+            'execute',
+        ).mockRejectedValueOnce(new Error())
+
+        // act
+        const result = await sut.execute(httpRequest)
+
+        // assert
+        expect(result.statusCode).toBe(500)
+    })
 })
