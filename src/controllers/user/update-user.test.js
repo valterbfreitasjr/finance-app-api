@@ -10,10 +10,10 @@ describe('Update User Controller', () => {
     }
 
     const makeSut = () => {
-        const updateUserUseCase = new UpdateUserUseCaseStub()
-        const sut = new UpdateUserController(updateUserUseCase)
+        const updateUserUseCaseStub = new UpdateUserUseCaseStub()
+        const sut = new UpdateUserController(updateUserUseCaseStub)
 
-        return { updateUserUseCase, sut }
+        return { updateUserUseCaseStub, sut }
     }
 
     const httpRequest = {
@@ -114,8 +114,8 @@ describe('Update User Controller', () => {
     // Error generic
     it('should return 500 if UpdateUserUseCase throws an generic error', async () => {
         // arrange
-        const { sut, updateUserUseCase } = makeSut()
-        jest.spyOn(updateUserUseCase, 'execute').mockRejectedValueOnce(
+        const { sut, updateUserUseCaseStub } = makeSut()
+        jest.spyOn(updateUserUseCaseStub, 'execute').mockRejectedValueOnce(
             new Error(),
         )
 
@@ -129,8 +129,8 @@ describe('Update User Controller', () => {
     // Error specific Email Already In Use Error
     it('should return 400 if UpdateUserUseCase throws an EmailAlreadyInUseError', async () => {
         // arrange
-        const { sut, updateUserUseCase } = makeSut()
-        jest.spyOn(updateUserUseCase, 'execute').mockRejectedValueOnce(
+        const { sut, updateUserUseCaseStub } = makeSut()
+        jest.spyOn(updateUserUseCaseStub, 'execute').mockRejectedValueOnce(
             new EmailAlreadyInUseError(faker.internet.email()),
         )
 
@@ -139,5 +139,21 @@ describe('Update User Controller', () => {
 
         // assert
         expect(result.statusCode).toBe(400)
+    })
+
+    // Correct Params
+    it('should return 200 when all corrects params are provided', async () => {
+        // arrange
+        const { sut, updateUserUseCaseStub } = makeSut()
+        const executeSpy = jest.spyOn(updateUserUseCaseStub, 'execute')
+
+        // act
+        await sut.execute(httpRequest)
+
+        // assert
+        expect(executeSpy).toHaveBeenCalledWith(
+            httpRequest.params.userId,
+            httpRequest.body,
+        )
     })
 })

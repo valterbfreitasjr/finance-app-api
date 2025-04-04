@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { DeleteUserController } from './delete-user'
 
 describe('Delete User Controller', () => {
-    class DeleteUserUseCaseStub {
+    class DeleteUserUseCaseStubStub {
         async execute() {
             return {
                 id: faker.string.uuid(),
@@ -17,10 +17,10 @@ describe('Delete User Controller', () => {
     }
 
     const makeSut = () => {
-        const deleteUserUseCase = new DeleteUserUseCaseStub()
-        const sut = new DeleteUserController(deleteUserUseCase)
+        const deleteUserUseCaseStub = new DeleteUserUseCaseStubStub()
+        const sut = new DeleteUserController(deleteUserUseCaseStub)
 
-        return { deleteUserUseCase, sut }
+        return { deleteUserUseCaseStub, sut }
     }
 
     const httpRequest = {
@@ -62,8 +62,8 @@ describe('Delete User Controller', () => {
     // User not found
     it('should return 404 if user is not found', async () => {
         //arrange
-        const { deleteUserUseCase, sut } = makeSut()
-        jest.spyOn(deleteUserUseCase, 'execute').mockReturnValue(null)
+        const { deleteUserUseCaseStub, sut } = makeSut()
+        jest.spyOn(deleteUserUseCaseStub, 'execute').mockReturnValue(null)
 
         //act
         const result = await sut.execute(httpRequest)
@@ -73,17 +73,31 @@ describe('Delete User Controller', () => {
     })
 
     // Server Error
-    it('should return 500 if DeleteUserUseCase throws an error', async () => {
+    it('should return 500 if DeleteUserUseCaseStub throws an error', async () => {
         //arrange
-        const { deleteUserUseCase, sut } = makeSut()
-        jest.spyOn(deleteUserUseCase, 'execute').mockImplementationOnce(() => {
-            throw new Error()
-        })
+        const { deleteUserUseCaseStub, sut } = makeSut()
+        jest.spyOn(deleteUserUseCaseStub, 'execute').mockImplementationOnce(
+            () => {
+                throw new Error()
+            },
+        )
 
         //act
         const result = await sut.execute(httpRequest)
 
         //assert
         expect(result.statusCode).toEqual(500)
+    })
+
+    it('should return 200 when all corrects params are provided', async () => {
+        // arrange
+        const { sut, deleteUserUseCaseStub } = makeSut()
+        const executeSpy = jest.spyOn(deleteUserUseCaseStub, 'execute')
+
+        // act
+        await sut.execute(httpRequest)
+
+        // assert
+        expect(executeSpy).toHaveBeenCalledWith(httpRequest.params.userId)
     })
 })

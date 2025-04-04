@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { GetUserByIdController } from './get-user-by-id'
 
 describe('Get User By Id Controller', () => {
-    class GetUserByIdUseCaseStub {
+    class GetUserByIdUseCaseStubStub {
         async execute() {
             return {
                 id: faker.string.uuid(),
@@ -17,10 +17,10 @@ describe('Get User By Id Controller', () => {
     }
 
     const makeSut = () => {
-        const getUserByIdUseCase = new GetUserByIdUseCaseStub()
-        const sut = new GetUserByIdController(getUserByIdUseCase)
+        const getUserByIdUseCaseStub = new GetUserByIdUseCaseStubStub()
+        const sut = new GetUserByIdController(getUserByIdUseCaseStub)
 
-        return { getUserByIdUseCase, sut }
+        return { getUserByIdUseCaseStub, sut }
     }
 
     const httpRequest = {
@@ -62,8 +62,8 @@ describe('Get User By Id Controller', () => {
     // User not found
     it('should return 404 if userId is not found', async () => {
         //arrange
-        const { sut, getUserByIdUseCase } = makeSut()
-        jest.spyOn(getUserByIdUseCase, 'execute').mockResolvedValue(null)
+        const { sut, getUserByIdUseCaseStub } = makeSut()
+        jest.spyOn(getUserByIdUseCaseStub, 'execute').mockResolvedValue(null)
 
         //act
         const result = await sut.execute(httpRequest)
@@ -73,10 +73,10 @@ describe('Get User By Id Controller', () => {
     })
 
     // Throws Error
-    it('should return 500 if GetUserByIdUseCase throws an error', async () => {
+    it('should return 500 if GetUserByIdUseCaseStub throws an error', async () => {
         //arrange
-        const { sut, getUserByIdUseCase } = makeSut()
-        jest.spyOn(getUserByIdUseCase, 'execute').mockRejectedValueOnce(
+        const { sut, getUserByIdUseCaseStub } = makeSut()
+        jest.spyOn(getUserByIdUseCaseStub, 'execute').mockRejectedValueOnce(
             new Error(),
         )
 
@@ -85,5 +85,18 @@ describe('Get User By Id Controller', () => {
 
         //assert
         expect(result.statusCode).toBe(500)
+    })
+
+    // Correct Params
+    it('should return 200 when all corrects params are provided', async () => {
+        // arrange
+        const { sut, getUserByIdUseCaseStub } = makeSut()
+        const executeSpy = jest.spyOn(getUserByIdUseCaseStub, 'execute')
+
+        // act
+        await sut.execute(httpRequest)
+
+        // assert
+        expect(executeSpy).toHaveBeenCalledWith(httpRequest.params.userId)
     })
 })

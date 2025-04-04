@@ -130,12 +130,28 @@ describe('Update Transaction Controller', () => {
             ...httpRequest,
             body: {
                 ...httpRequest.body,
-                date: 'invalid-type',
+                date: 'invalid-date',
             },
         })
 
         // assert
         expect(result.statusCode).toBe(400)
+    })
+
+    // Correct Params
+    it('should return 200 when all corrects params are provided', async () => {
+        // arrange
+        const { sut, updateTransactionUseCaseStub } = makeSut()
+        const executeSpy = jest.spyOn(updateTransactionUseCaseStub, 'execute')
+
+        // act
+        await sut.execute(httpRequest)
+
+        // assert
+        expect(executeSpy).toHaveBeenCalledWith(
+            httpRequest.params.transactionId,
+            httpRequest.body,
+        )
     })
 
     // Error

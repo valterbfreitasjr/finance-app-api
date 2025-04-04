@@ -114,4 +114,20 @@ describe('Get Transaction By User Id', () => {
         // assert
         expect(result.statusCode).toBe(500)
     })
+
+    // Correct Params
+    it('should return 200 when all corrects params are provided', async () => {
+        // arrange
+        const { sut, getTransactionByUserIdUseCaseStub } = makeSut()
+        const executeSpy = jest.spyOn(
+            getTransactionByUserIdUseCaseStub,
+            'execute',
+        )
+
+        // act
+        await sut.execute(httpRequest)
+
+        // assert
+        expect(executeSpy).toHaveBeenCalledWith(httpRequest.query.userId)
+    })
 })
