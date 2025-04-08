@@ -104,6 +104,38 @@ describe('Create User Use Case', () => {
         expect(result).rejects.toThrow()
     })
 
+    // Test idGeneratorAdapter throws an error
+    it('should throw an error if idGeneratorAdapter throws', async () => {
+        // arrange
+        const { sut, idGeneratorAdapter } = makeSut()
+        jest.spyOn(idGeneratorAdapter, 'execute').mockImplementationOnce(() => {
+            throw new Error()
+        })
+
+        // act
+        const result = sut.execute(createUserParams)
+
+        // assert
+        expect(result).rejects.toThrow()
+    })
+
+    // Test passwordHasherAdapter throws an error
+    it('should throw an error if passwordHasherAdapter throws', async () => {
+        // arrange
+        const { sut, passwordHasherAdapter } = makeSut()
+        jest.spyOn(passwordHasherAdapter, 'execute').mockImplementationOnce(
+            () => {
+                throw new Error()
+            },
+        )
+
+        // act
+        const result = sut.execute(createUserParams)
+
+        // assert
+        expect(result).rejects.toThrow()
+    })
+
     // Test idGeneratorAdapter to generate random Id
     it('should call idGeneratorAdapter to generate random Id', async () => {
         // arrange
