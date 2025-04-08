@@ -89,6 +89,21 @@ describe('Create User Use Case', () => {
         )
     })
 
+    // Test Create User Use Case throws an error
+    it('should throw an error if createUserRepository throws', async () => {
+        // arrange
+        const { sut, createUserRepository } = makeSut()
+        jest.spyOn(createUserRepository, 'execute').mockRejectedValueOnce(
+            new Error(),
+        )
+
+        // act
+        const result = sut.execute(createUserParams)
+
+        // assert
+        expect(result).rejects.toThrow()
+    })
+
     // Test idGeneratorAdapter to generate random Id
     it('should call idGeneratorAdapter to generate random Id', async () => {
         // arrange
