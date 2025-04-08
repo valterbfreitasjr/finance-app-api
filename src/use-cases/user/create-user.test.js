@@ -1,3 +1,4 @@
+import { EmailAlreadyInUseError } from '../../errors/user'
 import { CreateUserUseCase } from './create-user'
 import { faker } from '@faker-js/faker'
 
@@ -27,24 +28,23 @@ describe('Create User Use Case', () => {
     }
 
     const makeSut = () => {
-        const postgresGetUserByEmailRepository =
-            new GetUserByEmailRepositoryStub()
-        const postgresCreateUserRepository = new CreateUserRepositoryStub()
+        const GetUserByEmailRepository = new GetUserByEmailRepositoryStub()
+        const CreateUserRepository = new CreateUserRepositoryStub()
 
         const passwordHasherAdapter = new PasswordHasherAdapterStub()
         const idGeneratorAdapter = new IdGeneratorAdapterStub()
 
         const sut = new CreateUserUseCase(
-            postgresCreateUserRepository,
-            postgresGetUserByEmailRepository,
+            CreateUserRepository,
+            GetUserByEmailRepository,
             passwordHasherAdapter,
             idGeneratorAdapter,
         )
 
         return {
             sut,
-            postgresCreateUserRepository,
-            postgresGetUserByEmailRepository,
+            CreateUserRepository,
+            GetUserByEmailRepository,
             passwordHasherAdapter,
             idGeneratorAdapter,
         }
@@ -69,5 +69,23 @@ describe('Create User Use Case', () => {
 
         // assert
         expect(result).toBeTruthy()
+    })
+
+    // EmailAlreadyInUseError
+    it('should throws an EmailAlreadyInUseError if email is already in use', async () => {
+        // arrange
+        const { sut, GetUserByEmailRepository } = makeSut()
+
+        jest.spyOn(GetUserByEmailRepository, 'execute').mockResolvedValue(
+            createUserParams,
+        )
+
+        // act
+        const result = sut.execute(createUserParams)
+
+        // assert
+        await expect(result).rejects.toThrow(
+            new EmailAlreadyInUseError(createUserParams.email),
+        )
     })
 })
