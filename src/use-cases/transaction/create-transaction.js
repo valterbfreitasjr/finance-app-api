@@ -1,14 +1,15 @@
-import { v4 as uuidv4 } from 'uuid'
 import { UserNotFoundError } from '../../errors/user.js'
 
 export class CreateTransactionUseCase {
     constructor(
         postgresCreateTransactionRepository,
         postgresGetUserByIdRepository,
+        idGeneratorAdapter,
     ) {
         ;(this.postgresCreateTransactionRepository =
             postgresCreateTransactionRepository),
             (this.postgresGetUserByIdRepository = postgresGetUserByIdRepository)
+        this.idGeneratorAdapter = idGeneratorAdapter
     }
     async execute(createTransactionParams) {
         // TODO - Verificar se o usuário existe
@@ -19,7 +20,7 @@ export class CreateTransactionUseCase {
         if (!user) throw new UserNotFoundError(userId)
 
         //gerar uuid
-        const transactionId = uuidv4()
+        const transactionId = this.idGeneratorAdapter.execute()
 
         //criar transaction
         const transaction = {
