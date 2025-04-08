@@ -28,23 +28,23 @@ describe('Create User Use Case', () => {
     }
 
     const makeSut = () => {
-        const GetUserByEmailRepository = new GetUserByEmailRepositoryStub()
-        const CreateUserRepository = new CreateUserRepositoryStub()
+        const getUserByEmailRepository = new GetUserByEmailRepositoryStub()
+        const createUserRepository = new CreateUserRepositoryStub()
 
         const passwordHasherAdapter = new PasswordHasherAdapterStub()
         const idGeneratorAdapter = new IdGeneratorAdapterStub()
 
         const sut = new CreateUserUseCase(
-            CreateUserRepository,
-            GetUserByEmailRepository,
+            createUserRepository,
+            getUserByEmailRepository,
             passwordHasherAdapter,
             idGeneratorAdapter,
         )
 
         return {
             sut,
-            CreateUserRepository,
-            GetUserByEmailRepository,
+            createUserRepository,
+            getUserByEmailRepository,
             passwordHasherAdapter,
             idGeneratorAdapter,
         }
@@ -74,9 +74,9 @@ describe('Create User Use Case', () => {
     // EmailAlreadyInUseError
     it('should throws an EmailAlreadyInUseError if email is already in use', async () => {
         // arrange
-        const { sut, GetUserByEmailRepository } = makeSut()
+        const { sut, getUserByEmailRepository } = makeSut()
 
-        jest.spyOn(GetUserByEmailRepository, 'execute').mockResolvedValue(
+        jest.spyOn(getUserByEmailRepository, 'execute').mockResolvedValue(
             createUserParams,
         )
 
@@ -87,5 +87,27 @@ describe('Create User Use Case', () => {
         await expect(result).rejects.toThrow(
             new EmailAlreadyInUseError(createUserParams.email),
         )
+    })
+
+    // Test idGeneratorAdapter to generate random Id
+    it('should call idGeneratorAdapter to generate random Id', async () => {
+        // arrange
+        const { sut, idGeneratorAdapter, createUserRepository } = makeSut()
+        const idGeneratorAdapterSpy = jest.spyOn(idGeneratorAdapter, 'execute')
+        const createUserRepositorySpy = jest.spyOn(
+            createUserRepository,
+            'execute',
+        )
+
+        // act
+        await sut.execute(createUserParams)
+
+        // assert
+        expect(idGeneratorAdapterSpy).toHaveBeenCalled()
+        expect(createUserRepositorySpy).toHaveBeenCalledWith({
+            ...createUserParams,
+            id: 'any-id',
+            password: 'hashed-password',
+        })
     })
 })
