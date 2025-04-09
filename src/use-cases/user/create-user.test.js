@@ -89,6 +89,21 @@ describe('Create User Use Case', () => {
         )
     })
 
+    // Test GetUserByEmailRepository throws an error
+    it('should throw an error if getUserByEmailRepository throws', async () => {
+        // arrange
+        const { sut, getUserByEmailRepository } = makeSut()
+        jest.spyOn(getUserByEmailRepository, 'execute').mockRejectedValueOnce(
+            new Error(),
+        )
+
+        // act
+        const result = sut.execute(createUserParams)
+
+        // assert
+        expect(result).rejects.toThrow()
+    })
+
     // Test Create User Use Case throws an error
     it('should throw an error if createUserRepository throws', async () => {
         // arrange
