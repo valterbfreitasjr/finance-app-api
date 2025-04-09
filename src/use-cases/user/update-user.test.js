@@ -154,4 +154,23 @@ describe('Update User Use Case', () => {
             user,
         })
     })
+
+    it('should throw if GetUserByEmailRepository throws', async () => {
+        // arrange
+        const { sut, getUserByEmailRepository } = makeSut()
+        const userId = faker.string.uuid()
+        const getUserByEmailRepositorySpy = jest
+            .spyOn(getUserByEmailRepository, 'execute')
+            .mockImplementationOnce(() => {
+                throw new Error()
+            })
+
+        // act
+        await sut.execute(userId, {
+            user,
+        })
+
+        // assert
+        expect(getUserByEmailRepositorySpy).toThrow()
+    })
 })
