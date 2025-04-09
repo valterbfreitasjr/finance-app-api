@@ -159,18 +159,33 @@ describe('Update User Use Case', () => {
         // arrange
         const { sut, getUserByEmailRepository } = makeSut()
         const userId = faker.string.uuid()
-        const getUserByEmailRepositorySpy = jest
-            .spyOn(getUserByEmailRepository, 'execute')
-            .mockImplementationOnce(() => {
-                throw new Error()
-            })
+        jest.spyOn(getUserByEmailRepository, 'execute').mockRejectedValue(
+            new Error(),
+        )
 
         // act
-        await sut.execute(userId, {
-            user,
+        const result = sut.execute(userId, {
+            email: user.email,
         })
 
         // assert
-        expect(getUserByEmailRepositorySpy).toThrow()
+        expect(result).rejects.toThrow()
+    })
+
+    it('should throw if updateUserRepository throws', async () => {
+        // arrange
+        const { sut, updateUserRepository } = makeSut()
+        const userId = faker.string.uuid()
+        jest.spyOn(updateUserRepository, 'execute').mockRejectedValue(
+            new Error(),
+        )
+
+        // act
+        const result = sut.execute(userId, {
+            email: user.email,
+        })
+
+        // assert
+        expect(result).rejects.toThrow()
     })
 })
