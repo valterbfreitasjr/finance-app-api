@@ -135,4 +135,23 @@ describe('Update User Use Case', () => {
             new EmailAlreadyInUseError(user.email),
         )
     })
+
+    it('should call UpdateUserRepository with correct params', async () => {
+        // arrange
+        const { sut, updateUserRepository } = makeSut()
+        const userId = faker.string.uuid()
+        const updateUserRepositorySpy = jest
+            .spyOn(updateUserRepository, 'execute')
+            .mockResolvedValue(user)
+
+        // act
+        await sut.execute(userId, {
+            user,
+        })
+
+        // assert
+        expect(updateUserRepositorySpy).toHaveBeenCalledWith(userId, {
+            user,
+        })
+    })
 })
