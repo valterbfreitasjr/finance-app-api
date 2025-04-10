@@ -106,4 +106,19 @@ describe('Get Transaction By User Id Use Case', () => {
         // assert
         expect(result).rejects.toThrow()
     })
+
+    it('should throw if GetTransactionByUserIdRepository throws', async () => {
+        // arrange
+        const { sut, getTransactionByUserIdRepository } = makeSut()
+        jest.spyOn(
+            getTransactionByUserIdRepository,
+            'execute',
+        ).mockRejectedValueOnce(new Error())
+
+        // act
+        const result = sut.execute(transactionData.user_id)
+
+        // assert
+        expect(result).rejects.toThrow()
+    })
 })
