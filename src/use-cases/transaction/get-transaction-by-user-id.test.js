@@ -60,4 +60,36 @@ describe('Get Transaction By User Id Use Case', () => {
         // assert
         expect(result).rejects.toThrow(new UserNotFoundError(userId))
     })
+
+    it('should call GetUserByIdRepository with corrects values', async () => {
+        // arrange
+        const { sut, getUserByIdRepository } = makeSut()
+        const getUserByIdRepositorySpy = jest.spyOn(
+            getUserByIdRepository,
+            'execute',
+        )
+        const userId = transactionData.user_id
+
+        // act
+        await sut.execute(userId)
+
+        // assert
+        expect(getUserByIdRepositorySpy).toHaveBeenCalledWith(userId)
+    })
+
+    it('should call GetTransactionByUserIdRepository with corrects values', async () => {
+        // arrange
+        const { sut, getTransactionByUserIdRepository } = makeSut()
+        const getTransactionByUserIdRepositorySpy = jest.spyOn(
+            getTransactionByUserIdRepository,
+            'execute',
+        )
+        const userId = transactionData.user_id
+
+        // act
+        await sut.execute(userId)
+
+        // assert
+        expect(getTransactionByUserIdRepositorySpy).toHaveBeenCalledWith(userId)
+    })
 })
