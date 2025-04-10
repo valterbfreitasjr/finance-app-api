@@ -40,4 +40,23 @@ describe('', () => {
         // assert
         expect(result).toEqual(transactionData)
     })
+
+    it('should call UpdateTransactionRepository with correct values', async () => {
+        // arrange
+        const { sut, updateTransactionRepository } = makeSut()
+        const updateTransactionRepositorySpy = jest.spyOn(
+            updateTransactionRepository,
+            'execute',
+        )
+        const transactionId = transactionData.id
+
+        // act
+        await sut.execute(transactionId, transactionData)
+
+        // assert
+        expect(updateTransactionRepositorySpy).toHaveBeenCalledWith(
+            transactionId,
+            transactionData,
+        )
+    })
 })
