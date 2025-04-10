@@ -20,10 +20,10 @@ describe('Update Transaction Controller', () => {
     }
 
     const makeSut = () => {
-        const updateTransactionUseCaseStub = new UpdateTransactionUseCaseStub()
-        const sut = new UpdateTrasactionController(updateTransactionUseCaseStub)
+        const updateTransactionUseCase = new UpdateTransactionUseCaseStub()
+        const sut = new UpdateTrasactionController(updateTransactionUseCase)
 
-        return { sut, updateTransactionUseCaseStub }
+        return { sut, updateTransactionUseCase }
     }
 
     const httpRequest = {
@@ -141,8 +141,8 @@ describe('Update Transaction Controller', () => {
     // Correct Params
     it('should return 200 when all corrects params are provided', async () => {
         // arrange
-        const { sut, updateTransactionUseCaseStub } = makeSut()
-        const executeSpy = jest.spyOn(updateTransactionUseCaseStub, 'execute')
+        const { sut, updateTransactionUseCase } = makeSut()
+        const executeSpy = jest.spyOn(updateTransactionUseCase, 'execute')
 
         // act
         await sut.execute(httpRequest)
@@ -157,12 +157,11 @@ describe('Update Transaction Controller', () => {
     // Error
     it('should return 500 when UpdateTransactionUseCase throws an error', async () => {
         // arrange
-        const { sut, updateTransactionUseCaseStub } = makeSut()
+        const { sut, updateTransactionUseCase } = makeSut()
 
-        jest.spyOn(
-            updateTransactionUseCaseStub,
-            'execute',
-        ).mockRejectedValueOnce(new Error())
+        jest.spyOn(updateTransactionUseCase, 'execute').mockRejectedValueOnce(
+            new Error(),
+        )
 
         // act
         const result = await sut.execute(httpRequest)

@@ -1,6 +1,6 @@
 import { prisma } from '../../../../prisma/prisma.js'
 
-export class PostgresCreateUserRepository {
+export class CreateUserRepository {
     async execute(createUserParams) {
         return prisma.user.create({
             data: {

@@ -1,6 +1,6 @@
 import { prisma } from '../../../../prisma/prisma.js'
 
-export class PostgresGetTransactionByIdRepository {
+export class GetTransactionByIdRepository {
     async execute(transactionId) {
         return await prisma.transaction.findUnique({
             where: {

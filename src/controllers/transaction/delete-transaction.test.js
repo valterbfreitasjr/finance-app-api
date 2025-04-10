@@ -20,14 +20,12 @@ describe('Delete Transaction Controller', () => {
     }
 
     const makeSut = () => {
-        const deleteTransactionUseCaseStub = new DeleteTransactionUseCaseStub()
-        const sut = new DeleteTransactionController(
-            deleteTransactionUseCaseStub,
-        )
+        const deleteTransactionUseCase = new DeleteTransactionUseCaseStub()
+        const sut = new DeleteTransactionController(deleteTransactionUseCase)
 
         return {
             sut,
-            deleteTransactionUseCaseStub,
+            deleteTransactionUseCase,
         }
     }
 
@@ -89,11 +87,10 @@ describe('Delete Transaction Controller', () => {
     // Transaction not found
     it('should return 404 if transaction is not found', async () => {
         // arrange
-        const { sut, deleteTransactionUseCaseStub } = makeSut()
-        jest.spyOn(
-            deleteTransactionUseCaseStub,
-            'execute',
-        ).mockResolvedValueOnce(null)
+        const { sut, deleteTransactionUseCase } = makeSut()
+        jest.spyOn(deleteTransactionUseCase, 'execute').mockResolvedValueOnce(
+            null,
+        )
 
         // act
         const result = await sut.execute(httpRequest)
@@ -106,11 +103,10 @@ describe('Delete Transaction Controller', () => {
     // DeleteTransactionUseCase throws an error
     it('should return 500 if DeleteTransactionUseCase throws an error', async () => {
         // arrange
-        const { sut, deleteTransactionUseCaseStub } = makeSut()
-        jest.spyOn(
-            deleteTransactionUseCaseStub,
-            'execute',
-        ).mockRejectedValueOnce(new Error())
+        const { sut, deleteTransactionUseCase } = makeSut()
+        jest.spyOn(deleteTransactionUseCase, 'execute').mockRejectedValueOnce(
+            new Error(),
+        )
 
         // act
         const result = await sut.execute(httpRequest)
@@ -122,8 +118,8 @@ describe('Delete Transaction Controller', () => {
     // Correct Params
     it('should return 200 when all corrects params are provided', async () => {
         // arrange
-        const { sut, deleteTransactionUseCaseStub } = makeSut()
-        const executeSpy = jest.spyOn(deleteTransactionUseCaseStub, 'execute')
+        const { sut, deleteTransactionUseCase } = makeSut()
+        const executeSpy = jest.spyOn(deleteTransactionUseCase, 'execute')
 
         // act
         await sut.execute(httpRequest)

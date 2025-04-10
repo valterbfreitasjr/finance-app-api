@@ -2,20 +2,19 @@ import { UserNotFoundError } from '../../errors/user.js'
 
 export class CreateTransactionUseCase {
     constructor(
-        postgresCreateTransactionRepository,
-        postgresGetUserByIdRepository,
+        CreateTransactionRepository,
+        GetUserByIdRepository,
         idGeneratorAdapter,
     ) {
-        ;(this.postgresCreateTransactionRepository =
-            postgresCreateTransactionRepository),
-            (this.postgresGetUserByIdRepository = postgresGetUserByIdRepository)
+        ;(this.CreateTransactionRepository = CreateTransactionRepository),
+            (this.GetUserByIdRepository = GetUserByIdRepository)
         this.idGeneratorAdapter = idGeneratorAdapter
     }
     async execute(createTransactionParams) {
         // TODO - Verificar se o usuário existe
         const userId = createTransactionParams.user_id
 
-        const user = await this.postgresGetUserByIdRepository.execute(userId)
+        const user = await this.GetUserByIdRepository.execute(userId)
 
         if (!user) throw new UserNotFoundError(userId)
 
@@ -29,7 +28,7 @@ export class CreateTransactionUseCase {
         }
 
         const createdTransaction =
-            await this.postgresCreateTransactionRepository.execute(transaction)
+            await this.CreateTransactionRepository.execute(transaction)
 
         return createdTransaction
     }

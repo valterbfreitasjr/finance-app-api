@@ -1,9 +1,9 @@
 export class GetUserByIdUseCase {
-    constructor(postgresGetUserByIdRepository) {
-        this.postgresGetUserByIdRepository = postgresGetUserByIdRepository
+    constructor(GetUserByIdRepository) {
+        this.GetUserByIdRepository = GetUserByIdRepository
     }
     async execute(userId) {
-        const user = await this.postgresGetUserByIdRepository.execute(userId)
+        const user = await this.GetUserByIdRepository.execute(userId)
 
         return user
     }

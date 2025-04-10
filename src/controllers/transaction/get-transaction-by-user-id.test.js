@@ -23,13 +23,13 @@ describe('Get Transaction By User Id', () => {
     }
 
     const makeSut = () => {
-        const getTransactionByUserIdUseCaseStub =
+        const getTransactionByUserIdUseCase =
             new GetTransactionByUserIdUseCaseStub()
         const sut = new GetTransactionByUserIdController(
-            getTransactionByUserIdUseCaseStub,
+            getTransactionByUserIdUseCase,
         )
 
-        return { sut, getTransactionByUserIdUseCaseStub }
+        return { sut, getTransactionByUserIdUseCase }
     }
 
     const httpRequest = {
@@ -85,9 +85,9 @@ describe('Get Transaction By User Id', () => {
     // Transaction not found
     it('should return 404 when GetTransactionByUserIdUseCase throws an error UserNotFoundError ', async () => {
         // arrange
-        const { sut, getTransactionByUserIdUseCaseStub } = makeSut()
+        const { sut, getTransactionByUserIdUseCase } = makeSut()
         jest.spyOn(
-            getTransactionByUserIdUseCaseStub,
+            getTransactionByUserIdUseCase,
             'execute',
         ).mockRejectedValueOnce(new UserNotFoundError())
 
@@ -102,9 +102,9 @@ describe('Get Transaction By User Id', () => {
     // Server error
     it('should return 500 if GetTransactionByUserIdUseCase throws an error', async () => {
         // arrange
-        const { sut, getTransactionByUserIdUseCaseStub } = makeSut()
+        const { sut, getTransactionByUserIdUseCase } = makeSut()
         jest.spyOn(
-            getTransactionByUserIdUseCaseStub,
+            getTransactionByUserIdUseCase,
             'execute',
         ).mockRejectedValueOnce(new Error())
 
@@ -118,11 +118,8 @@ describe('Get Transaction By User Id', () => {
     // Correct Params
     it('should return 200 when all corrects params are provided', async () => {
         // arrange
-        const { sut, getTransactionByUserIdUseCaseStub } = makeSut()
-        const executeSpy = jest.spyOn(
-            getTransactionByUserIdUseCaseStub,
-            'execute',
-        )
+        const { sut, getTransactionByUserIdUseCase } = makeSut()
+        const executeSpy = jest.spyOn(getTransactionByUserIdUseCase, 'execute')
 
         // act
         await sut.execute(httpRequest)

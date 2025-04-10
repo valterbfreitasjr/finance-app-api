@@ -2,20 +2,19 @@ import { EmailAlreadyInUseError } from '../../errors/user.js'
 
 export class CreateUserUseCase {
     constructor(
-        postgresCreateUserRepository,
-        postgresGetUserByEmailRepository,
+        CreateUserRepository,
+        GetUserByEmailRepository,
         passwordHasherAdapter,
         idGeneratorAdapter,
     ) {
-        ;(this.postgresCreateUserRepository = postgresCreateUserRepository),
-            (this.postgresGetUserByEmailRepository =
-                postgresGetUserByEmailRepository)
+        ;(this.CreateUserRepository = CreateUserRepository),
+            (this.GetUserByEmailRepository = GetUserByEmailRepository)
         this.passwordHasherAdapter = passwordHasherAdapter
         this.idGeneratorAdapter = idGeneratorAdapter
     }
     async execute(createUserParams) {
         // TODO - verificar e-mail se em uso
-        const isUsedEmail = await this.postgresGetUserByEmailRepository.execute(
+        const isUsedEmail = await this.GetUserByEmailRepository.execute(
             createUserParams.email,
         )
 
@@ -38,8 +37,7 @@ export class CreateUserUseCase {
             password: hashedPassword,
         }
 
-        const createdUser =
-            await this.postgresCreateUserRepository.execute(user)
+        const createdUser = await this.CreateUserRepository.execute(user)
 
         return createdUser
     }

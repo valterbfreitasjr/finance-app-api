@@ -6,13 +6,13 @@ import {
 } from '../../controllers/index.js'
 
 import {
-    PostgresCreateTransactionRepository,
-    PostgresGetTransactionByUserIdRepository,
-    PostgresGetUserByIdRepository,
-    PostgresUpdateTransactionRepository,
-    PostgresDeleteTransactionRepository,
-    PostgresGetTransactionByIdRepository,
-} from '../../repositories/postgres/index.js'
+    CreateTransactionRepository,
+    GetTransactionByUserIdRepository,
+    GetUserByIdRepository,
+    UpdateTransactionRepository,
+    DeleteTransactionRepository,
+    GetTransactionByIdRepository,
+} from '../../repositories/index.js'
 
 import {
     CreateTransactionUseCase,
@@ -26,13 +26,12 @@ import { IdGeneratorAdapter } from '../../adapters/index.js'
 export const makeCreateTransactionController = () => {
     const idGeneratorAdapter = new IdGeneratorAdapter()
 
-    const postgresCreateTransactionRepository =
-        new PostgresCreateTransactionRepository()
-    const postgresGetUserByIdRepository = new PostgresGetUserByIdRepository()
+    const createTransactionRepository = new CreateTransactionRepository()
+    const getUserByIdRepository = new GetUserByIdRepository()
 
     const createTransactionUseCase = new CreateTransactionUseCase(
-        postgresCreateTransactionRepository,
-        postgresGetUserByIdRepository,
+        createTransactionRepository,
+        getUserByIdRepository,
         idGeneratorAdapter,
     )
 
@@ -44,13 +43,13 @@ export const makeCreateTransactionController = () => {
 }
 
 export const makeGetTransactionByUserIdController = () => {
-    const postgresGetTransactionByUserIdRepository =
-        new PostgresGetTransactionByUserIdRepository()
-    const postgresGetUserByIdRepository = new PostgresGetUserByIdRepository()
+    const getTransactionByUserIdRepository =
+        new GetTransactionByUserIdRepository()
+    const getUserByIdRepository = new GetUserByIdRepository()
 
     const getTransactionByUserIdUseCase = new GetTransactionByUserIdUseCase(
-        postgresGetTransactionByUserIdRepository,
-        postgresGetUserByIdRepository,
+        getTransactionByUserIdRepository,
+        getUserByIdRepository,
     )
 
     const getTransactionByUserIdController =
@@ -60,11 +59,10 @@ export const makeGetTransactionByUserIdController = () => {
 }
 
 export const makeUpdateTransactionController = () => {
-    const postgresUpdateTransactionRepository =
-        new PostgresUpdateTransactionRepository()
+    const updateTransactionRepository = new UpdateTransactionRepository()
 
     const updateTransactionUseCase = new UpdateTransactionUseCase(
-        postgresUpdateTransactionRepository,
+        updateTransactionRepository,
     )
 
     const updateTrasactionController = new UpdateTrasactionController(
@@ -75,14 +73,12 @@ export const makeUpdateTransactionController = () => {
 }
 
 export const makeDeleteTransactionController = () => {
-    const postgresDeleteTransactionRepository =
-        new PostgresDeleteTransactionRepository()
-    const postgresGetTransactionByIdRepository =
-        new PostgresGetTransactionByIdRepository()
+    const deleteTransactionRepository = new DeleteTransactionRepository()
+    const getTransactionByIdRepository = new GetTransactionByIdRepository()
 
     const deleteTransactionUseCase = new DeleteTransactionUseCase(
-        postgresDeleteTransactionRepository,
-        postgresGetTransactionByIdRepository,
+        deleteTransactionRepository,
+        getTransactionByIdRepository,
     )
 
     const deleteTransactionController = new DeleteTransactionController(

@@ -1,20 +1,13 @@
 import { TransactionNotFoundError } from '../../errors/user.js'
 
 export class DeleteTransactionUseCase {
-    constructor(
-        postgresDeleteTransactionRepository,
-        postgresGetTransactionByIdRepository,
-    ) {
-        this.postgresDeleteTransactionRepository =
-            postgresDeleteTransactionRepository
-        this.postgresGetTransactionByIdRepository =
-            postgresGetTransactionByIdRepository
+    constructor(DeleteTransactionRepository, GetTransactionByIdRepository) {
+        this.DeleteTransactionRepository = DeleteTransactionRepository
+        this.GetTransactionByIdRepository = GetTransactionByIdRepository
     }
     async execute(transactionId, userId) {
         const transaction =
-            await this.postgresGetTransactionByIdRepository.execute(
-                transactionId,
-            )
+            await this.GetTransactionByIdRepository.execute(transactionId)
         if (!transaction) {
             throw new TransactionNotFoundError()
         }
@@ -22,9 +15,7 @@ export class DeleteTransactionUseCase {
             throw new Error('Forbidden.')
         }
         const deletedTransaction =
-            await this.postgresDeleteTransactionRepository.execute(
-                transactionId,
-            )
+            await this.DeleteTransactionRepository.execute(transactionId)
         return deletedTransaction
     }
 }

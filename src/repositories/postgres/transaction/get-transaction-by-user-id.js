@@ -1,6 +1,6 @@
 import { prisma } from '../../../../prisma/prisma.js'
 
-export class PostgresGetTransactionByUserIdRepository {
+export class GetTransactionByUserIdRepository {
     async execute(userId) {
         console.log(userId)
         return await prisma.transaction.findMany({
