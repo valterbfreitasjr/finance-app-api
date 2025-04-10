@@ -25,7 +25,7 @@ describe('Create Transaction Use Case', () => {
 
     class IdGeneratorAdapterStub {
         execute() {
-            return faker.string.uuid()
+            return 'random_id'
         }
     }
 
@@ -51,6 +51,22 @@ describe('Create Transaction Use Case', () => {
         }
     }
 
-    const { sut } = makeSut()
-    sut
+    const transactionData = {
+        user_id: faker.string.uuid(),
+        name: faker.person.firstName(),
+        date: faker.date.anytime().toISOString(),
+        amount: Number(faker.finance.amount()),
+        type: faker.helpers.arrayElement(['EXPENSE', 'EARNING', 'INVESTMENT']),
+    }
+
+    it('should create transaction successfully', async () => {
+        // arrange
+        const { sut } = makeSut()
+
+        // act
+        const result = await sut.execute(transactionData)
+
+        // assert
+        expect(result).toEqual({ ...transactionData, id: 'random_id' })
+    })
 })
