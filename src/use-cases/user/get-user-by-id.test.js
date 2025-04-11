@@ -1,14 +1,9 @@
-import { faker } from '@faker-js/faker'
 import { GetUserByIdUseCase } from './get-user-by-id'
+import { userData } from '../../tests'
 
 describe('Get User By Id', () => {
     const user = {
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-        password: faker.internet.password({
-            length: 7,
-        }),
+        ...userData,
     }
 
     class GetUserByIdRepositoryStub {
@@ -28,7 +23,7 @@ describe('Get User By Id', () => {
     it('should get a user by id', async () => {
         // arrange
         const { sut } = makeSut()
-        const userId = faker.string.uuid()
+        const userId = user.id
 
         // act
         const result = await sut.execute(userId)
@@ -41,7 +36,7 @@ describe('Get User By Id', () => {
         // arrange
         const { sut, getUserByIdRepository } = makeSut()
         const getUserByIdSpy = jest.spyOn(getUserByIdRepository, 'execute')
-        const userId = faker.string.uuid()
+        const userId = user.id
 
         // act
         await sut.execute(userId)
@@ -56,7 +51,7 @@ describe('Get User By Id', () => {
         jest.spyOn(getUserByIdRepository, 'execute').mockRejectedValueOnce(
             new Error(),
         )
-        const userId = faker.string.uuid()
+        const userId = user.id
 
         // act
         const result = sut.execute(userId)

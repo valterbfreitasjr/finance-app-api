@@ -1,14 +1,9 @@
-import { faker } from '@faker-js/faker'
 import { DeleteTransactionUseCase } from './delete-transaction'
+import { transaction } from '../../tests'
 
 describe('Delete Transaction Use Case', () => {
     const transactionData = {
-        id: faker.string.uuid(),
-        user_id: faker.string.uuid(),
-        name: faker.person.firstName(),
-        date: faker.date.anytime().toISOString(),
-        amount: Number(faker.finance.amount()),
-        type: faker.helpers.arrayElement(['EXPENSE', 'EARNING', 'INVESTMENT']),
+        ...transaction,
     }
 
     class DeleteTransactionRepositoryStub {
@@ -66,9 +61,7 @@ describe('Delete Transaction Use Case', () => {
         jest.spyOn(
             deleteTransactionRepository,
             'execute',
-        ).mockImplementationOnce(() => {
-            throw new Error()
-        })
+        ).mockRejectedValueOnce(new Error())
 
         // act
         const result = sut.execute(transactionData.id)

@@ -1,13 +1,11 @@
 import { faker } from '@faker-js/faker'
 import { UpdateUserUseCase } from './update-user.js'
 import { EmailAlreadyInUseError } from '../../errors/user.js'
+import { userData } from '../../tests/index.js'
 
 describe('Update User Use Case', () => {
     const user = {
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
+        ...userData,
     }
 
     class UpdateUserRepositoryStub {
@@ -50,7 +48,7 @@ describe('Update User Use Case', () => {
     it('should update user successfully without email and password', async () => {
         // arrange
         const { sut } = makeSut()
-        const userId = faker.string.uuid()
+        const userId = user.id
 
         // act
         const result = await sut.execute(userId, {
@@ -65,7 +63,7 @@ describe('Update User Use Case', () => {
     it('should update user successfully with email', async () => {
         // arrange
         const { sut } = makeSut()
-        const userId = faker.string.uuid()
+        const userId = user.id
 
         // act
         const result = await sut.execute(userId, {
@@ -80,8 +78,8 @@ describe('Update User Use Case', () => {
         // arrange
         const { sut, getUserByEmailRepository } = makeSut()
 
-        const userId = faker.string.uuid()
-        const email = faker.internet.email()
+        const userId = user.id
+        const email = user.email
 
         const getUserByEmailRepositorySpy = jest.spyOn(
             getUserByEmailRepository,
@@ -101,8 +99,8 @@ describe('Update User Use Case', () => {
         // arrange
         const { sut, passwordHasherAdapter } = makeSut()
 
-        const userId = faker.string.uuid()
-        const password = faker.internet.password()
+        const userId = user.id
+        const password = user.password
 
         const passwordHasherAdapterSpy = jest.spyOn(
             passwordHasherAdapter,

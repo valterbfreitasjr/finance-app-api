@@ -1,5 +1,5 @@
-import { faker } from '@faker-js/faker'
 import { DeleteUserUseCase } from './delete-user.js'
+import { userData } from '../../tests/index.js'
 
 describe('Delete User Use Case', () => {
     class deleteUserRepositoryStub {
@@ -17,15 +17,16 @@ describe('Delete User Use Case', () => {
     }
 
     const deleteUserParams = {
-        userId: faker.string.uuid(),
+        ...userData,
     }
 
     it('should delete a user', async () => {
         // arrange
         const { sut } = makeSut()
+        const userId = deleteUserParams.id
 
         // act
-        const result = await sut.execute(deleteUserParams)
+        const result = await sut.execute(userId)
 
         // assert
         expect(result).toBeTruthy()
@@ -35,7 +36,7 @@ describe('Delete User Use Case', () => {
         // arrange
         const { sut, deleteUserRepository } = makeSut()
         const deleteUserSpy = jest.spyOn(deleteUserRepository, 'execute')
-        const userId = faker.string.uuid()
+        const userId = deleteUserParams.id
 
         // act
         await sut.execute(userId)
@@ -51,9 +52,10 @@ describe('Delete User Use Case', () => {
         jest.spyOn(deleteUserRepository, 'execute').mockRejectedValueOnce(
             new Error(),
         )
+        const userId = deleteUserParams.id
 
         // act
-        const result = sut.execute(deleteUserParams)
+        const result = sut.execute(userId)
 
         // assert
         expect(result).rejects.toThrow()

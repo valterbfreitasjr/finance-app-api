@@ -1,15 +1,10 @@
-import { faker } from '@faker-js/faker'
 import { GetTransactionByUserIdUseCase } from './get-transaction-by-user-id'
 import { UserNotFoundError } from '../../errors/user'
+import { transaction } from '../../tests'
 
 describe('Get Transaction By User Id Use Case', () => {
     const transactionData = {
-        id: faker.string.uuid(),
-        user_id: faker.string.uuid(),
-        name: faker.person.firstName(),
-        date: faker.date.anytime().toISOString(),
-        amount: Number(faker.finance.amount()),
-        type: faker.helpers.arrayElement(['EXPENSE', 'EARNING', 'INVESTMENT']),
+        ...transaction,
     }
 
     class GetTransactionByUserIdRepositoryStub {
