@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker'
+import { transaction } from './../../tests/index.js'
 import { CreateTransactionController } from './create-transaction'
 
 describe('Create Transaction Controller', () => {
@@ -17,15 +17,7 @@ describe('Create Transaction Controller', () => {
 
     const httpRequest = {
         body: {
-            user_id: faker.string.uuid(),
-            name: faker.person.firstName(),
-            date: faker.date.anytime().toISOString(),
-            type: faker.helpers.arrayElement([
-                'EXPENSE',
-                'EARNING',
-                'INVESTMENT',
-            ]),
-            amount: Number(faker.finance.amount()),
+            ...transaction,
         },
     }
 

@@ -1,20 +1,11 @@
-import { faker } from '@faker-js/faker'
 import { UpdateTrasactionController } from './update-transaction.js'
+import { transaction, userData } from '../../tests/index.js'
 
 describe('Update Transaction Controller', () => {
     class UpdateTransactionUseCaseStub {
         async execute() {
             return {
-                user_id: faker.string.uuid(),
-                id: faker.string.uuid(),
-                name: faker.person.firstName(),
-                date: faker.date.anytime().toISOString(),
-                type: faker.helpers.arrayElement([
-                    'EXPENSE',
-                    'EARNING',
-                    'INVESTMENT',
-                ]),
-                amount: Number(faker.finance.amount()),
+                ...transaction,
             }
         }
     }
@@ -26,15 +17,19 @@ describe('Update Transaction Controller', () => {
         return { sut, updateTransactionUseCase }
     }
 
+    const user = {
+        ...userData,
+    }
+
     const httpRequest = {
         params: {
-            transactionId: faker.string.uuid(),
+            transactionId: transaction.id,
         },
         body: {
-            name: faker.person.firstName(),
-            date: faker.date.anytime().toISOString(),
-            type: 'EXPENSE',
-            amount: Number(faker.finance.amount()),
+            name: user.name,
+            date: user.date,
+            type: user.type,
+            amount: user.amount,
         },
     }
 

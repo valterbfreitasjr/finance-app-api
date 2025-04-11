@@ -1,11 +1,16 @@
 import { faker } from '@faker-js/faker'
 import { UpdateUserController } from './update-user'
 import { EmailAlreadyInUseError } from '../../errors/user'
+import { userData } from '../../tests'
 
 describe('Update User Controller', () => {
+    const user = {
+        ...userData,
+    }
+
     class UpdateUserUseCaseStub {
         async execute(user) {
-            return user
+            return { user }
         }
     }
 
@@ -18,13 +23,13 @@ describe('Update User Controller', () => {
 
     const httpRequest = {
         params: {
-            userId: faker.string.uuid(),
+            userId: user.id,
         },
         body: {
-            first_name: faker.person.firstName(),
-            last_name: faker.person.lastName(),
-            email: faker.internet.email(),
-            password: faker.internet.password(),
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            password: user.password,
         },
     }
 
@@ -131,7 +136,7 @@ describe('Update User Controller', () => {
         // arrange
         const { sut, updateUserUseCaseStub } = makeSut()
         jest.spyOn(updateUserUseCaseStub, 'execute').mockRejectedValueOnce(
-            new EmailAlreadyInUseError(faker.internet.email()),
+            new EmailAlreadyInUseError(user.email),
         )
 
         // act

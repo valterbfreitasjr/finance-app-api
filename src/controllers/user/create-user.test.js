@@ -1,8 +1,12 @@
-import { faker } from '@faker-js/faker'
 import { CreateUserController } from './create-user'
 import { EmailAlreadyInUseError } from '../../errors/user'
+import { userData } from '../../tests'
 
 describe('Create User Controller', () => {
+    const user = {
+        ...userData,
+    }
+
     class CreateUserUseCaseStub {
         execute(user) {
             return user
@@ -18,10 +22,7 @@ describe('Create User Controller', () => {
 
     const httpRequest = {
         body: {
-            first_name: faker.person.firstName(),
-            last_name: faker.person.lastName(),
-            email: faker.internet.email(),
-            password: faker.internet.password(),
+            ...user,
         },
     }
 
@@ -133,9 +134,7 @@ describe('Create User Controller', () => {
         const result = await sut.execute({
             body: {
                 ...httpRequest.body,
-                password: faker.internet.password({
-                    length: 5,
-                }),
+                password: httpRequest.password,
             },
         })
 

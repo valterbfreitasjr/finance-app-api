@@ -1,22 +1,13 @@
-import { faker } from '@faker-js/faker'
 import { GetTransactionByUserIdController } from './get-transaction-by-user-id.js'
 import { UserNotFoundError } from '../../errors/user.js'
+import { transaction, userData } from '../../tests/index.js'
 
 describe('Get Transaction By User Id', () => {
     class GetTransactionByUserIdUseCaseStub {
         async execute() {
             return [
                 {
-                    id: faker.string.uuid(),
-                    user_id: faker.string.uuid(),
-                    name: faker.person.firstName(),
-                    date: faker.date.anytime().toISOString(),
-                    type: faker.helpers.arrayElement([
-                        'EXPENSE',
-                        'EARNING',
-                        'INVESTMENT',
-                    ]),
-                    amount: Number(faker.finance.amount()),
+                    ...transaction,
                 },
             ]
         }
@@ -32,9 +23,13 @@ describe('Get Transaction By User Id', () => {
         return { sut, getTransactionByUserIdUseCase }
     }
 
+    const user = {
+        ...userData,
+    }
+
     const httpRequest = {
         query: {
-            userId: faker.string.uuid(),
+            userId: user.id,
         },
     }
 
