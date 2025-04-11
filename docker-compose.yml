@@ -17,6 +17,6 @@ services:
         environment:
             POSTGRES_USER: 'root'
             POSTGRES_PASSWORD: 'password'
-            POSTGRES_DB: financeapp-db-test
+            POSTGRES_DB: financeapp
         ports:
-            - '5433:5433'
+            - '5433:5432'
