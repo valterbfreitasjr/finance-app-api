@@ -23,6 +23,7 @@ describe('Create User Controller', () => {
     const httpRequest = {
         body: {
             ...user,
+            id: undefined,
         },
     }
 

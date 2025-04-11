@@ -3,7 +3,7 @@ import { CreateTransactionController } from './create-transaction'
 
 describe('Create Transaction Controller', () => {
     class CreateTransactionUseCaseStub {
-        async execute(transaction) {
+        async execute() {
             return transaction
         }
     }
@@ -18,6 +18,7 @@ describe('Create Transaction Controller', () => {
     const httpRequest = {
         body: {
             ...transaction,
+            id: undefined,
         },
     }
 
