@@ -23,4 +23,20 @@ describe('Get User By Id Repository', () => {
         // assert
         expect(result).toStrictEqual(createdUser)
     })
+
+    it('should call Prisma with correct params', async () => {
+        // arrange
+        const sut = makeSut()
+        const prismaSpy = jest.spyOn(prisma.user, 'findUnique')
+
+        // act
+        await sut.execute(fakeUser.id)
+
+        // assert
+        expect(prismaSpy).toHaveBeenCalledWith({
+            where: {
+                id: fakeUser.id,
+            },
+        })
+    })
 })
