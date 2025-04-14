@@ -15,7 +15,7 @@ describe('Delete User Repository', () => {
             data: userData,
         })
 
-        const { sut } = new makeSut()
+        const { sut } = makeSut()
 
         // act
         const result = await sut.execute(userData.id)
@@ -26,7 +26,7 @@ describe('Delete User Repository', () => {
 
     it('should call Prisma with correct params', async () => {
         // arrange
-        const { sut } = new makeSut()
+        const { sut } = makeSut()
         const prismaSpy = jest.spyOn(prisma.user, 'delete')
 
         // act

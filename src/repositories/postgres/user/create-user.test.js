@@ -11,7 +11,7 @@ describe('Create User Repository', () => {
 
     it('should create a user on db successfully', async () => {
         // arrange
-        const { sut } = new makeSut()
+        const { sut } = makeSut()
 
         // act
         const result = await sut.execute(userData)
