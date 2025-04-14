@@ -4,8 +4,8 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "test": "dotenv -e .env.test -- jest --passWithNoTests ",
-        "test:watch": "npm run test -- --watch --runInBand",
+        "test": "dotenv -e .env.test -- jest --passWithNoTests  --runInBand",
+        "test:watch": "npm run test -- --watch",
         "test:coverage": "npm run test -- --coverage",
         "postinstall": "npx husky install",
         "migrations": "node src/db/postgres/migrations/exec.js",
