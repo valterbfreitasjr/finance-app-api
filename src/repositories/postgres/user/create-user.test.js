@@ -37,4 +37,16 @@ describe('Create User Repository', () => {
             data: fakeUser,
         })
     })
+
+    it('should CreateUserRepository throws if Prisma throws', async () => {
+        // arrange
+        const { sut } = makeSut()
+        jest.spyOn(prisma.user, 'create').mockRejectedValueOnce(new Error())
+
+        // act
+        const result = sut.execute(fakeUser)
+
+        // assert
+        expect(result).rejects.toThrow()
+    })
 })
