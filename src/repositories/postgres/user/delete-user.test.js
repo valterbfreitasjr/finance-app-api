@@ -23,4 +23,20 @@ describe('Delete User Repository', () => {
         // assert
         expect(result).toStrictEqual(userData)
     })
+
+    it('should call Prisma with correct params', async () => {
+        // arrange
+        const { sut } = new makeSut()
+        const prismaSpy = jest.spyOn(prisma.user, 'delete')
+
+        // act
+        await sut.execute(userData.id)
+
+        // assert
+        expect(prismaSpy).toHaveBeenCalledWith({
+            where: {
+                id: userData.id,
+            },
+        })
+    })
 })
