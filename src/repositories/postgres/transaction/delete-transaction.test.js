@@ -1,26 +1,31 @@
 import { prisma } from '../../../../prisma/prisma'
-import { transaction } from '../../../tests/fixtures/transaction.js'
+import { DeleteTransactionRepository } from './delete-transaction'
 import { userData as fakeUser } from '../../../tests/fixtures/user.js'
-import { CreateTransactionRepository } from './create-transaction'
+import { transaction } from '../../../tests/fixtures/transaction.js'
 import dayjs from 'dayjs'
 
-describe('Create Transaction Repository', () => {
+describe('Delete Transaction Repository', () => {
     const makeSut = () => {
-        const sut = new CreateTransactionRepository()
+        const sut = new DeleteTransactionRepository()
 
         return { sut }
     }
 
-    it('should create a transaction on db', async () => {
+    it('should delete transaction on db', async () => {
         // arrange
         const createdUser = await prisma.user.create({
             data: fakeUser,
         })
 
-        const { sut } = makeSut()
+        const createdTransaction = await prisma.transaction.create({
+            ...transaction,
+            user_id: createdUser.id,
+        })
+
+        const sut = makeSut()
 
         // act
-        const result = await sut.execute(transaction)
+        const result = await sut.execute(createdTransaction.id)
 
         // assert
         expect(result.name).toBe(createdUser.name)
