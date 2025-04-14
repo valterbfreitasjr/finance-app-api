@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { userData as fakeUser } from '../../../tests'
 import { prisma } from './../../../../prisma/prisma.js'
 import { GetUserBalanceRepository } from './get-user-balance.js'
+import { TransactionType } from '@prisma/client'
 
 describe('Get User Balance Repository', () => {
     const makeSut = () => {
@@ -88,7 +89,7 @@ describe('Get User Balance Repository', () => {
         expect(prismaSpy).toHaveBeenCalledWith({
             where: {
                 user_id: fakeUser.id,
-                type: 'EXPENSE',
+                type: TransactionType.EXPENSE,
             },
             _sum: {
                 amount: true,
@@ -97,7 +98,7 @@ describe('Get User Balance Repository', () => {
         expect(prismaSpy).toHaveBeenCalledWith({
             where: {
                 user_id: fakeUser.id,
-                type: 'EARNING',
+                type: TransactionType.EARNING,
             },
             _sum: {
                 amount: true,
@@ -106,7 +107,7 @@ describe('Get User Balance Repository', () => {
         expect(prismaSpy).toHaveBeenCalledWith({
             where: {
                 user_id: fakeUser.id,
-                type: 'INVESTMENT',
+                type: TransactionType.INVESTMENT,
             },
             _sum: {
                 amount: true,

@@ -1,4 +1,4 @@
-import { userData } from '../../../tests/fixtures/user'
+import { userData as fakeUser } from '../../../tests/fixtures/user'
 import { CreateUserRepository } from './create-user'
 import { prisma } from './../../../../prisma/prisma.js'
 
@@ -14,14 +14,14 @@ describe('Create User Repository', () => {
         const { sut } = makeSut()
 
         // act
-        const result = await sut.execute(userData)
+        const result = await sut.execute(fakeUser)
 
         // assert
-        expect(result.id).toBe(userData.id)
-        expect(result.first_name).toBe(userData.first_name)
-        expect(result.last_name).toBe(userData.last_name)
-        expect(result.email).toBe(userData.email)
-        expect(result.password).toBe(userData.password)
+        expect(result.id).toBe(fakeUser.id)
+        expect(result.first_name).toBe(fakeUser.first_name)
+        expect(result.last_name).toBe(fakeUser.last_name)
+        expect(result.email).toBe(fakeUser.email)
+        expect(result.password).toBe(fakeUser.password)
     })
 
     it('should call Prisma with correct params', async () => {
@@ -30,11 +30,11 @@ describe('Create User Repository', () => {
         const prismaSpy = jest.spyOn(prisma.user, 'create')
 
         // act
-        await sut.execute(userData)
+        await sut.execute(fakeUser)
 
         // assert
         expect(prismaSpy).toHaveBeenCalledWith({
-            data: userData,
+            data: fakeUser,
         })
     })
 })
