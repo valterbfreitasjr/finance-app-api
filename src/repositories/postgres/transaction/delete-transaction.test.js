@@ -18,8 +18,10 @@ describe('Delete Transaction Repository', () => {
         })
 
         const createdTransaction = await prisma.transaction.create({
-            ...transaction,
-            user_id: createdUser.id,
+            data: {
+                ...transaction,
+                user_id: createdUser.id,
+            },
         })
 
         const sut = makeSut()
