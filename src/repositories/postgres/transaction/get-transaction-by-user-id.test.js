@@ -61,4 +61,18 @@ describe('Get Transaction By User Id', () => {
             },
         })
     })
+
+    it('should throw an error if Prisma throws', async () => {
+        // arrange
+        const { sut } = makeSut()
+        jest.spyOn(prisma.transaction, 'findMany').mockRejectedValueOnce(
+            new Error(),
+        )
+
+        // act
+        const result = sut.execute(fakeUser.id)
+
+        // assert
+        expect(result).rejects.toThrow()
+    })
 })
