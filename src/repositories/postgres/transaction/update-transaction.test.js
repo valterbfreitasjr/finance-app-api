@@ -51,4 +51,35 @@ describe('', () => {
             dayjs(updatedTransaction.date).year,
         )
     })
+
+    it('should call Prisma with correct params', async () => {
+        // arrange
+        const { sut } = makeSut()
+        const prismaSpy = jest.spyOn(prisma.transaction, 'update')
+
+        // act
+        await sut.execute(transaction.id, transaction)
+
+        // assert
+        expect(prismaSpy).toHaveBeenCalledWith({
+            where: {
+                id: transaction.id,
+            },
+            data: { ...transaction, user_id: transaction.user_id },
+        })
+    })
+
+    it('should call Prisma with correct params', async () => {
+        // arrange
+        const { sut } = makeSut()
+        jest.spyOn(prisma.transaction, 'update').mockRejectedValueOnce(
+            new Error(),
+        )
+
+        // act
+        const result = sut.execute(transaction.id, transaction)
+
+        //assert
+        expect(result).rejects.toThrow()
+    })
 })
