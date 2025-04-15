@@ -47,17 +47,41 @@ describe('Delete Transaction Repository', () => {
 
     it('should call Prisma with correct params', async () => {
         // arrange
+        const createdUser = await prisma.user.create({
+            data: fakeUser,
+        })
+
+        const createdTransaction = await prisma.transaction.create({
+            data: {
+                ...transaction,
+                user_id: createdUser.id,
+            },
+        })
         const { sut } = makeSut()
         const prismaSpy = jest.spyOn(prisma.transaction, 'delete')
 
         // act
-        await sut.execute(transaction.id)
+        await sut.execute(createdTransaction.id)
 
         // assert
         expect(prismaSpy).toHaveBeenCalledWith({
             where: {
-                id: transaction.id,
+                id: createdTransaction.id,
             },
         })
+    })
+
+    it('', async () => {
+        // arrange
+        const { sut } = makeSut()
+        const prismaSpy = jest
+            .spyOn(prisma.transaction, 'delete')
+            .mockRejectedValueOnce(new Error())
+
+        // act
+        sut.execute()
+
+        // assert
+        expect(prismaSpy).rejects.toThrow()
     })
 })

@@ -37,4 +37,44 @@ describe('Create Transaction Repository', () => {
 
         expect(dayjs(result.date).year).toBe(dayjs(transaction.date).year)
     })
+
+    it('should call Prisma with correct params', async () => {
+        // arrange
+        const createdUser = await prisma.user.create({
+            data: fakeUser,
+        })
+        const { sut } = makeSut()
+        const prismaSpy = jest.spyOn(prisma.transaction, 'create')
+
+        // act
+        await sut.execute({
+            ...transaction,
+            user_id: createdUser.id,
+        })
+
+        // assert
+        expect(prismaSpy).toHaveBeenCalledWith({
+            data: {
+                ...transaction,
+                user_id: createdUser.id,
+            },
+        })
+    })
+
+    it('should throw an error if Prisma throws', async () => {
+        // arrange
+        const { sut } = makeSut()
+        jest.spyOn(prisma.transaction, 'create').mockRejectedValueOnce(
+            new Error(),
+        )
+
+        // act
+        const result = sut.execute({
+            ...transaction,
+            user_id: fakeUser.id,
+        })
+
+        // assert
+        expect(result).not.toThrow()
+    })
 })
