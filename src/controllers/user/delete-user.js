@@ -1,3 +1,4 @@
+import { UserNotFoundError } from '../../errors/user.js'
 import {
     checkIfUuidIsValid,
     invalidIdResponse,
@@ -27,6 +28,9 @@ export class DeleteUserController {
 
             return ok(deletedUser)
         } catch (error) {
+            if (error instanceof UserNotFoundError) {
+                throw new userNotFoundResponse()
+            }
             return serverError()
         }
     }
