@@ -1,5 +1,13 @@
-import { CreateUserController, GetUserByIdController } from '../../controllers'
-import { makeCreateUserController, makeGetUserByIdController } from './user'
+import {
+    CreateUserController,
+    GetUserByIdController,
+    UpdateUserController,
+} from '../../controllers'
+import {
+    makeCreateUserController,
+    makeGetUserByIdController,
+    makeUpdateUserController,
+} from './user'
 
 describe('User Controller Factorie', () => {
     it('should returns a valid CreateUserController instance', () => {
@@ -8,5 +16,9 @@ describe('User Controller Factorie', () => {
 
     it('should returns a valid GetUserByIdController instance', () => {
         expect(makeGetUserByIdController).toBeInstanceOf(GetUserByIdController)
+    })
+
+    it('should returns a valid UpdateUserController instance', () => {
+        expect(makeUpdateUserController).toBeInstanceOf(UpdateUserController)
     })
 })
