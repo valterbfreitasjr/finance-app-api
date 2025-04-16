@@ -83,9 +83,9 @@ app.get('/api/transactions', async (req, res) => {
 
 // UPDATE TRANSACTION
 app.patch('/api/transactions/:transactionId', async (req, res) => {
-    const updateTrasactionController = makeUpdateTransactionController()
+    const updateTransactionController = makeUpdateTransactionController()
 
-    const { statusCode, body } = await updateTrasactionController.execute(req)
+    const { statusCode, body } = await updateTransactionController.execute(req)
 
     return res.status(statusCode).json(body)
 })

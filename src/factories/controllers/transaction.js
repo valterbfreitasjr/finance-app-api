@@ -1,7 +1,7 @@
 import {
     CreateTransactionController,
     GetTransactionByUserIdController,
-    UpdateTrasactionController,
+    UpdateTransactionController,
     DeleteTransactionController,
 } from '../../controllers/index.js'
 
@@ -65,11 +65,11 @@ export const makeUpdateTransactionController = () => {
         updateTransactionRepository,
     )
 
-    const updateTrasactionController = new UpdateTrasactionController(
+    const updateTransactionController = new UpdateTransactionController(
         updateTransactionUseCase,
     )
 
-    return updateTrasactionController
+    return updateTransactionController
 }
 
 export const makeDeleteTransactionController = () => {
