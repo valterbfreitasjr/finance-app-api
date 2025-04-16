@@ -1,5 +1,6 @@
 import { DeleteTransactionController } from './delete-transaction'
 import { transaction, userData } from '../../tests'
+import { TransactionNotFoundError } from '../../errors/user'
 
 describe('Delete Transaction Controller', () => {
     class DeleteTransactionUseCaseStub {
@@ -84,7 +85,7 @@ describe('Delete Transaction Controller', () => {
         // arrange
         const { sut, deleteTransactionUseCase } = makeSut()
         jest.spyOn(deleteTransactionUseCase, 'execute').mockResolvedValueOnce(
-            null,
+            new TransactionNotFoundError(),
         )
 
         // act
