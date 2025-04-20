@@ -1,4 +1,4 @@
-import { UpdateTrasactionController } from './update-transaction.js'
+import { UpdateTransactionController } from './update-transaction.js'
 import { transaction, userData } from '../../tests/index.js'
 
 describe('Update Transaction Controller', () => {
@@ -12,7 +12,7 @@ describe('Update Transaction Controller', () => {
 
     const makeSut = () => {
         const updateTransactionUseCase = new UpdateTransactionUseCaseStub()
-        const sut = new UpdateTrasactionController(updateTransactionUseCase)
+        const sut = new UpdateTransactionController(updateTransactionUseCase)
 
         return { sut, updateTransactionUseCase }
     }
