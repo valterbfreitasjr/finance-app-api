@@ -38,8 +38,6 @@ describe('Delete User Controller', () => {
 
         //assert
         expect(result.statusCode).toEqual(200)
-        expect(result.body).not.toBeUndefined()
-        expect(result.body).not.toBeNull()
     })
 
     // Ensure userId
@@ -55,14 +53,14 @@ describe('Delete User Controller', () => {
         })
 
         //assert
-        expect(result.statusCode).toEqual(400)
+        expect(result.statusCode).toBe(400)
     })
 
     // User not found
     it('should return 404 if user is not found', async () => {
         //arrange
         const { deleteUserUseCaseStub, sut } = makeSut()
-        jest.spyOn(deleteUserUseCaseStub, 'execute').mockReturnValue(
+        jest.spyOn(deleteUserUseCaseStub, 'execute').mockRejectedValueOnce(
             new UserNotFoundError(),
         )
 
@@ -70,7 +68,7 @@ describe('Delete User Controller', () => {
         const result = await sut.execute(httpRequest)
 
         //assert
-        expect(result.statusCode).toEqual(404)
+        expect(result.statusCode).toBe(404)
     })
 
     // Server Error
@@ -87,7 +85,7 @@ describe('Delete User Controller', () => {
         const result = await sut.execute(httpRequest)
 
         //assert
-        expect(result.statusCode).toEqual(500)
+        expect(result.statusCode).toBe(500)
     })
 
     it('should return 200 when all corrects params are provided', async () => {

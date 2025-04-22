@@ -4,12 +4,6 @@ import { userData as fakeUser } from '../../../tests'
 import { UpdateUserRepository } from './update-user'
 
 describe('Update User Repository', () => {
-    const makeSut = () => {
-        const sut = new UpdateUserRepository()
-
-        return { sut }
-    }
-
     const createdUser = async () => {
         return await prisma.user.create({
             data: fakeUser,
@@ -24,7 +18,7 @@ describe('Update User Repository', () => {
 
     it('should update user on db', async () => {
         // arrange
-        const sut = makeSut()
+        const sut = new UpdateUserRepository()
 
         // act
         const result = await sut.execute(createdUser.id, updatedUser)
@@ -35,7 +29,7 @@ describe('Update User Repository', () => {
 
     it('should call Prisma with correct params', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new UpdateUserRepository()
         const prismaSpy = jest.spyOn(prisma.user, 'update')
 
         // act
@@ -52,7 +46,7 @@ describe('Update User Repository', () => {
 
     it('should UpdateUserRepository throws if Prisma throws', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new UpdateUserRepository()
         jest.spyOn(prisma.user, 'update').mockRejectedValueOnce(new Error())
 
         // act

@@ -5,49 +5,43 @@ import { UserNotFoundError } from '../../../errors/user.js'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 
 describe('Delete User Repository', () => {
-    const makeSut = () => {
-        const sut = new DeleteUserRepository()
-
-        return { sut }
-    }
-
     it('should delete a user on db', async () => {
         // arrange
-        const createdUser = await prisma.user.create({
+        await prisma.user.create({
             data: fakeUser,
         })
 
-        const { sut } = makeSut()
+        const sut = new DeleteUserRepository()
 
         // act
-        const result = await sut.execute(createdUser.id)
+        const result = await sut.execute(fakeUser.id)
 
         // assert
-        expect(result).toStrictEqual(createdUser)
+        expect(result).toStrictEqual(fakeUser)
     })
 
     it('should call Prisma with correct params', async () => {
         // arrange
-        const createdUser = await prisma.user.create({
+        await prisma.user.create({
             data: fakeUser,
         })
-        const { sut } = makeSut()
+        const sut = new DeleteUserRepository()
         const prismaSpy = jest.spyOn(prisma.user, 'delete')
 
         // act
-        await sut.execute(createdUser.id)
+        await sut.execute(fakeUser.id)
 
         // assert
         expect(prismaSpy).toHaveBeenCalledWith({
             where: {
-                id: createdUser.id,
+                id: fakeUser.id,
             },
         })
     })
 
     it('should throw generic error if Prisma throws generic error', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new DeleteUserRepository()
         jest.spyOn(prisma.user, 'delete').mockRejectedValueOnce(new Error())
 
         // act
@@ -59,7 +53,7 @@ describe('Delete User Repository', () => {
 
     it('should throw generic error if Prisma throws generic error', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new DeleteUserRepository()
         jest.spyOn(prisma.user, 'delete').mockRejectedValueOnce(
             new PrismaClientKnownRequestError('', {
                 code: 'P2025',

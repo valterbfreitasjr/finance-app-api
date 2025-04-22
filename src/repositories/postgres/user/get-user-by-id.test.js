@@ -3,31 +3,29 @@ import { userData as fakeUser } from '../../../tests'
 import { GetUserByIdRepository } from './get-user-by-id'
 
 describe('Get User By Id Repository', () => {
-    const makeSut = () => {
-        const sut = new GetUserByIdRepository()
-
-        return { sut }
-    }
-
     it('should get user by id on db', async () => {
         // arrange
-        const createdUser = await prisma.user.create({
+        await prisma.user.create({
             data: fakeUser,
         })
 
-        const { sut } = makeSut()
+        const sut = new GetUserByIdRepository()
 
         // act
-        const result = sut.execute(createdUser.id)
+        const result = sut.execute(fakeUser.id)
 
         // assert
-        expect(result).toStrictEqual(createdUser)
+        expect(result).toStrictEqual(fakeUser)
     })
 
     it('should call Prisma with correct params', async () => {
         // arrange
-        const sut = makeSut()
+        const sut = new GetUserByIdRepository()
         const prismaSpy = jest.spyOn(prisma.user, 'findUnique')
+
+        await prisma.user.create({
+            data: fakeUser,
+        })
 
         // act
         await sut.execute(fakeUser.id)
@@ -42,7 +40,7 @@ describe('Get User By Id Repository', () => {
 
     it('should GetUserByIdRepository throws if Prisma throws', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new GetUserByIdRepository()
         jest.spyOn(prisma.user, 'findUnique').mockRejectedValueOnce(new Error())
 
         // act

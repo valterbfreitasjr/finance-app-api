@@ -11,10 +11,3 @@ export class UserNotFoundError extends Error {
         this.name = 'UserNotFoundError'
     }
 }
-
-export class TransactionNotFoundError extends Error {
-    constructor(transactionId) {
-        super(`The transaction ID : ${transactionId} not found.`)
-        this.name = 'TransactionNotFoundError'
-    }
-}

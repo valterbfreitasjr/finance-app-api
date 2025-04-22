@@ -12,7 +12,7 @@ import {
     UpdateTransactionRepository,
     DeleteTransactionRepository,
     GetTransactionByIdRepository,
-} from '../../repositories/index.js'
+} from '../../repositories/postgres/index.js'
 
 import {
     CreateTransactionUseCase,

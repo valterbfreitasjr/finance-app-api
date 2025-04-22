@@ -5,12 +5,6 @@ import { transaction } from '../../../tests/fixtures/transaction'
 import dayjs from 'dayjs'
 
 describe('Get Transaction By User Id', () => {
-    const makeSut = () => {
-        const sut = new GetTransactionByUserIdRepository()
-
-        return { sut }
-    }
-
     it('should get transaction by user id on db', async () => {
         // arrange
         const createdUser = await prisma.user.create({
@@ -24,7 +18,7 @@ describe('Get Transaction By User Id', () => {
             },
         })
 
-        const { sut } = makeSut()
+        const sut = new GetTransactionByUserIdRepository()
 
         // act
         const result = await sut.execute(createdUser.id)
@@ -48,7 +42,7 @@ describe('Get Transaction By User Id', () => {
 
     it('should call Prisma with corrects params', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new GetTransactionByUserIdRepository()
         const prismaSpy = jest.spyOn(prisma.transaction, 'findMany')
 
         // act
@@ -64,7 +58,7 @@ describe('Get Transaction By User Id', () => {
 
     it('should throw an error if Prisma throws', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new GetTransactionByUserIdRepository()
         jest.spyOn(prisma.transaction, 'findMany').mockRejectedValueOnce(
             new Error(),
         )

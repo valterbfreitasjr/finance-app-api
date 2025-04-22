@@ -1,26 +1,28 @@
 import { faker } from '@faker-js/faker'
 import { prisma } from '../../../../prisma/prisma'
 import { transaction } from '../../../tests/fixtures/transaction.js'
+import { userData as fakeUser } from '../../../tests/fixtures/user.js'
 import { UpdateTransactionRepository } from './update-transaction'
 import dayjs from 'dayjs'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
+import { TransactionNotFoundError } from '../../../errors/transaction.js'
 
-describe('', () => {
-    const makeSut = () => {
-        const sut = new UpdateTransactionRepository()
-
-        return { sut }
-    }
-
+describe('Update Transaction Repository', () => {
     it('should update transaction on db', async () => {
         // arrange
-        const createdTransaction = await prisma.transaction.create({
-            data: transaction,
+        await prisma.user.create({ data: fakeUser })
+        await prisma.transaction.create({
+            data: {
+                ...transaction,
+                user_id: fakeUser.id,
+            },
         })
 
-        const { sut } = makeSut()
+        const sut = new UpdateTransactionRepository()
 
         const updatedTransaction = {
-            user_id: createdTransaction.user_id,
+            id: faker.string.uuid(),
+            user_id: fakeUser.id,
             name: faker.commerce.productName(),
             date: faker.date.anytime().toISOString(),
             type: 'EXPENSE',
@@ -28,10 +30,7 @@ describe('', () => {
         }
 
         // act
-        const result = await sut.execute({
-            ...updatedTransaction,
-            id: createdTransaction.id,
-        })
+        const result = await sut.execute(transaction.id, updatedTransaction)
 
         // assert
         expect(result.name).toBe(updatedTransaction.name)
@@ -54,32 +53,54 @@ describe('', () => {
 
     it('should call Prisma with correct params', async () => {
         // arrange
-        const { sut } = makeSut()
+        await prisma.user.create({ data: fakeUser })
+        await prisma.transaction.create({
+            data: {
+                ...transaction,
+                user_id: fakeUser.id,
+            },
+        })
+        const sut = new UpdateTransactionRepository()
         const prismaSpy = jest.spyOn(prisma.transaction, 'update')
 
         // act
-        await sut.execute(transaction.id, transaction)
+        await sut.execute(transaction.id, {
+            ...transaction,
+            user_id: fakeUser.id,
+        })
 
         // assert
         expect(prismaSpy).toHaveBeenCalledWith({
             where: {
                 id: transaction.id,
             },
-            data: { ...transaction, user_id: transaction.user_id },
+            data: { ...transaction, user_id: fakeUser.id },
         })
     })
 
-    it('should call Prisma with correct params', async () => {
-        // arrange
-        const { sut } = makeSut()
+    it('should throw if Prisma throws', async () => {
+        const sut = new UpdateTransactionRepository()
         jest.spyOn(prisma.transaction, 'update').mockRejectedValueOnce(
             new Error(),
         )
 
-        // act
-        const result = sut.execute(transaction.id, transaction)
+        const promise = sut.execute(transaction.id, transaction)
 
-        //assert
-        expect(result).rejects.toThrow()
+        await expect(promise).rejects.toThrow()
+    })
+
+    it('should throw TransactionNotFoundError if Prisma does not find record to update', async () => {
+        const sut = new UpdateTransactionRepository()
+        jest.spyOn(prisma.transaction, 'update').mockRejectedValueOnce(
+            new PrismaClientKnownRequestError('', {
+                code: 'P2025',
+            }),
+        )
+
+        const promise = sut.execute(transaction.id, transaction)
+
+        await expect(promise).rejects.toThrow(
+            new TransactionNotFoundError(transaction.id),
+        )
     })
 })

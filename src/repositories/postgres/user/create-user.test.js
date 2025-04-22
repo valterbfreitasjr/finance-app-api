@@ -3,15 +3,9 @@ import { CreateUserRepository } from './create-user'
 import { prisma } from './../../../../prisma/prisma.js'
 
 describe('Create User Repository', () => {
-    const makeSut = () => {
-        const sut = new CreateUserRepository()
-
-        return { sut }
-    }
-
     it('should create a user on db successfully', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new CreateUserRepository()
 
         // act
         const result = await sut.execute(fakeUser)
@@ -26,7 +20,7 @@ describe('Create User Repository', () => {
 
     it('should call Prisma with correct params', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new CreateUserRepository()
         const prismaSpy = jest.spyOn(prisma.user, 'create')
 
         // act
@@ -40,7 +34,7 @@ describe('Create User Repository', () => {
 
     it('should CreateUserRepository throws if Prisma throws', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new CreateUserRepository()
         jest.spyOn(prisma.user, 'create').mockRejectedValueOnce(new Error())
 
         // act

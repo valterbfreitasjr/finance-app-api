@@ -2,7 +2,7 @@ import { prisma } from '../../../../prisma/prisma.js'
 import { userData as fakeUser } from '../../../tests'
 import { GetUserByEmailRepository } from './get-user-by-email'
 
-describe('Get User By Email Repository', async () => {
+describe('Get User By Email Repository', () => {
     const makeSut = () => {
         const sut = new GetUserByEmailRepository()
 
@@ -46,7 +46,7 @@ describe('Get User By Email Repository', async () => {
         jest.spyOn(prisma.user, 'findUnique').mockRejectedValueOnce(new Error())
 
         // act
-        const result = sut.execute(fakeUser.id)
+        const result = sut.execute(fakeUser.email)
 
         // assert
         expect(result).rejects.toThrow()

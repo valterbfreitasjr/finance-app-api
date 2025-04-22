@@ -5,19 +5,13 @@ import { CreateTransactionRepository } from './create-transaction'
 import dayjs from 'dayjs'
 
 describe('Create Transaction Repository', () => {
-    const makeSut = () => {
-        const sut = new CreateTransactionRepository()
-
-        return { sut }
-    }
-
     it('should create a transaction on db', async () => {
         // arrange
         const createdUser = await prisma.user.create({
             data: fakeUser,
         })
 
-        const { sut } = makeSut()
+        const sut = new CreateTransactionRepository()
 
         // act
         const result = await sut.execute(transaction)
@@ -43,7 +37,7 @@ describe('Create Transaction Repository', () => {
         const createdUser = await prisma.user.create({
             data: fakeUser,
         })
-        const { sut } = makeSut()
+        const sut = new CreateTransactionRepository()
         const prismaSpy = jest.spyOn(prisma.transaction, 'create')
 
         // act
@@ -63,7 +57,7 @@ describe('Create Transaction Repository', () => {
 
     it('should throw an error if Prisma throws', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new CreateTransactionRepository()
         jest.spyOn(prisma.transaction, 'create').mockRejectedValueOnce(
             new Error(),
         )
@@ -75,6 +69,6 @@ describe('Create Transaction Repository', () => {
         })
 
         // assert
-        expect(result).not.toThrow()
+        expect(result).rejects.toThrow()
     })
 })
