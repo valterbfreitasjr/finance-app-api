@@ -1,15 +1,9 @@
 import { IdGeneratorAdapter } from './id-generator'
 
 describe('Id Generator Adapter', () => {
-    const makeSut = () => {
-        const sut = new IdGeneratorAdapter()
-
-        return { sut }
-    }
-
     it('should return a random id', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new IdGeneratorAdapter()
 
         // act
         const result = await sut.execute()

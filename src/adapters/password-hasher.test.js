@@ -2,15 +2,9 @@ import { faker } from '@faker-js/faker'
 import { PasswordHasherAdapter } from './password-hasher'
 
 describe('Password Hasher Adapter', () => {
-    const makeSut = () => {
-        const sut = new PasswordHasherAdapter()
-
-        return { sut }
-    }
-
     it('should return a hashed passwrd', async () => {
         // arrange
-        const { sut } = makeSut()
+        const sut = new PasswordHasherAdapter()
         const password = faker.internet.password()
 
         // act

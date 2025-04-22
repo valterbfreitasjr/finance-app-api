@@ -4,7 +4,7 @@ import cors from 'cors'
 import { usersRouter } from './src/routes/users.js'
 import { transactionsRouter } from './src/routes/transactions.js'
 
-const app = express()
+export const app = express()
 
 app.use(express.json())
 
