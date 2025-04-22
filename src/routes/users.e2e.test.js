@@ -29,8 +29,8 @@ describe('User Routes E2E Tests', () => {
         )
 
         expect(response.status).toBe(200)
-        expect(response.body.id).toBe(createdUser.id)
-        expect(response.body).toEqual(createdUser)
+        expect(response.body.id).toBe(createdUser.body.id)
+        expect(response.body).toEqual(createdUser.body)
     })
 
     it('PATCH /api/users/:userId should return 200 when user is updated', async () => {
@@ -59,5 +59,20 @@ describe('User Routes E2E Tests', () => {
         expect(response.body.lastName).toBe(updateUserParams.last_name)
         expect(response.body.email).toBe(updateUserParams.email)
         expect(response.body.password).not.toBe(updateUserParams.password)
+    })
+
+    it('DELETE /api/users/:userId', async () => {
+        const createdUser = await request(app)
+            .post('/api/users')
+            .send({
+                ...fakeUser,
+                id: undefined,
+            })
+
+        const response = await request(app).delete(
+            `/api/users/${createdUser.body.id}`,
+        )
+
+        expect(response.status).toBe(200)
     })
 })
