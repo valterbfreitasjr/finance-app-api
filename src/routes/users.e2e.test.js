@@ -62,7 +62,7 @@ describe('User Routes E2E Tests', () => {
         expect(response.body.password).not.toBe(updateUserParams.password)
     })
 
-    it('DELETE /api/users/:userId', async () => {
+    it('DELETE /api/users/:userId should delete an user on db', async () => {
         const createdUser = await request(app)
             .post('/api/users')
             .send({
@@ -129,5 +129,39 @@ describe('User Routes E2E Tests', () => {
         )
 
         expect(response.status).toBe(404)
+    })
+
+    it('PATCH /api/users/:userId should return 404 if user is not found', async () => {
+        const response = await request(app)
+            .patch(`/api/users/${faker.string.uuid()}`)
+            .send({
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({
+                    length: 7,
+                }),
+            })
+
+        expect(response.status).toBe(404)
+    })
+
+    it('POST /api/users should return 400 when the provided e-mail is already in use', async () => {
+        const createdUser = await request(app)
+            .post('/api/users')
+            .send({
+                ...fakeUser,
+                id: undefined,
+            })
+
+        const response = await request(app)
+            .post('/api/users')
+            .send({
+                ...fakeUser,
+                id: undefined,
+                email: createdUser.body.email,
+            })
+
+        expect(response.status).toBe(400)
     })
 })
