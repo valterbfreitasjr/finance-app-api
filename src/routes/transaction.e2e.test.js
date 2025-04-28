@@ -60,4 +60,24 @@ describe('Transaction Routes E2E Tests', () => {
         expect(response.status).toBe(200)
         expect(response.body.amount).toBe(1000)
     })
+
+    it('DELETE /api/:transactionId should returns 200 when deleting a transaction successfully', async () => {
+        const createdUser = await request(app)
+            .post('/api/users')
+            .send({
+                ...fakeUser,
+                id: undefined,
+            })
+
+        const createdTransaction = await request(app)
+            .post('/api/transactiions')
+            .send({ ...transaction, user_id: createdUser.id, id: undefined })
+
+        const response = await request(app).delete(
+            `/api/transactions/${createdTransaction.id}`,
+        )
+
+        expect(response.status).toBe(200)
+        expect(response.body.id).toBe(createdTransaction.id)
+    })
 })
