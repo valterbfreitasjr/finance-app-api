@@ -164,4 +164,18 @@ describe('Update Transaction Controller', () => {
         // assert
         expect(result.statusCode).toBe(500)
     })
+
+    it('should return 404 when UserNotFoundResponse, is thrown', async () => {
+        // arrange
+        const { sut, updateTransactionUseCase } = makeSut()
+        jest.spyOn(updateTransactionUseCase, 'execute').mockRejectedValueOnce(
+            new Error('UserNotFoundResponse'),
+        )
+
+        // act
+        const response = await sut.execute(httpRequest)
+
+        // assert
+        expect(response.statusCode).toBe(40)
+    })
 })
