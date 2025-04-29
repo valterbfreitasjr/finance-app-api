@@ -6,7 +6,7 @@ import {
     invalidIdResponse,
     ok,
     serverError,
-    userNotFoundResponse,
+    transactionNotFoundResponse,
 } from '../helpers/index.js'
 import { TransactionNotFoundError } from '../../errors/transaction.js'
 
@@ -42,7 +42,7 @@ export class UpdateTransactionController {
             }
 
             if (error instanceof TransactionNotFoundError) {
-                return userNotFoundResponse()
+                return transactionNotFoundResponse()
             }
 
             console.log(error)
