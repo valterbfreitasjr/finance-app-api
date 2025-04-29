@@ -1,5 +1,6 @@
 import { UpdateTransactionController } from './update-transaction.js'
 import { transaction, userData } from '../../tests/index.js'
+import { TransactionNotFoundError } from '../../errors/transaction.js'
 
 describe('Update Transaction Controller', () => {
     class UpdateTransactionUseCaseStub {
@@ -169,13 +170,13 @@ describe('Update Transaction Controller', () => {
         // arrange
         const { sut, updateTransactionUseCase } = makeSut()
         jest.spyOn(updateTransactionUseCase, 'execute').mockRejectedValueOnce(
-            new Error('UserNotFoundResponse'),
+            new TransactionNotFoundError(),
         )
 
         // act
         const response = await sut.execute(httpRequest)
 
         // assert
-        expect(response.statusCode).toBe(40)
+        expect(response.statusCode).toBe(404)
     })
 })
