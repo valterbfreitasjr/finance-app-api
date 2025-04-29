@@ -103,4 +103,22 @@ describe('Update Transaction Repository', () => {
             new TransactionNotFoundError(transaction.id),
         )
     })
+
+    it('should throw UserNotFoundError if user is not found to update', async () => {
+        // arrange
+        const sut = new UpdateTransactionRepository()
+        jest.spyOn(prisma.transaction, 'update').mockRejectedValueOnce(
+            new PrismaClientKnownRequestError('', {
+                code: 'P2025',
+            }),
+        )
+
+        // act
+        const result = sut.execute(transaction.id, transaction)
+
+        // assert
+        expect(result).rejects.toThrow(
+            new TransactionNotFoundError(transaction.id),
+        )
+    })
 })
