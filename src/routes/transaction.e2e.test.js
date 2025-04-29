@@ -1,6 +1,7 @@
 import request from 'supertest'
 import { app } from '../app'
 import { transaction, userData as fakeUser } from '../tests'
+import { TransactionType } from '@prisma/client'
 
 describe('Transaction Routes E2E Tests', () => {
     it('POST /api/transactions should return 201 when creating a transaction successfully', async () => {
@@ -55,7 +56,7 @@ describe('Transaction Routes E2E Tests', () => {
 
         const response = await request(app)
             .patch(`/api/transactions/${createdTransaction.id}`)
-            .send({ amount: 1000 })
+            .send({ amount: 1000, type: TransactionType.INVESTMENT })
 
         expect(response.status).toBe(200)
         expect(response.body.amount).toBe(1000)
@@ -79,5 +80,13 @@ describe('Transaction Routes E2E Tests', () => {
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBe(createdTransaction.id)
+    })
+
+    it('PATCH /api/transactions/:transactionId should return 404 when updating a non-existing transaction', async () => {
+        const response = await request(app)
+            .patch(`/api/transactions/${transaction.id}`)
+            .send({ amount: 1000, type: TransactionType.EXPENSE })
+
+        expect(response.status).toBe(404)
     })
 })
