@@ -10,7 +10,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout
+            - name: Checkout code
               uses: actions/checkout@v2
 
             - name: Use Node.js
@@ -18,11 +18,14 @@ jobs:
               with:
                   node-version: '20'
 
+            - name: Install dependencies
+              run: npm install
+
             - name: ESLint
               uses: npm run eslint:check
 
             - name: Prettier
-              uses: npm run prettier:check
+              run: npm run prettier:check
 
             - name: Test
-              uses: npm run test
+              run: npm run test
