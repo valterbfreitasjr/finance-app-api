@@ -1,5 +1,5 @@
 import request from 'supertest'
-import { app } from '../app'
+import { app } from '../app.cjs'
 import { transaction, userData as fakeUser } from '../tests'
 import { TransactionType } from '@prisma/client'
 
